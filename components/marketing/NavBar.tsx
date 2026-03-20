@@ -31,13 +31,13 @@ export function NavBar() {
       </ul>
       <div className="flex items-center gap-2.5">
         <Link
-          href="/customer"
+          href="/customer/auth/login"
           className="text-[13.5px] font-medium text-[#1A1208] bg-transparent border-none cursor-pointer px-3.5 py-2 hover:text-[#C4622D] transition-colors duration-200"
         >
           Sign in
         </Link>
         <Link
-          href="/customer"
+          href="/customer/shipments/new"
           className="text-[13.5px] font-semibold text-[#FFFDF9] bg-[#1A1208] border-none cursor-pointer px-5 py-2.5 rounded-md hover:bg-[#C4622D] transition-colors duration-200 tracking-[0.01em]"
         >
           Get a Quote

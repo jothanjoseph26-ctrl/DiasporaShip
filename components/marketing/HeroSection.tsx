@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const steps = [
   {
@@ -37,7 +38,12 @@ export default function HeroSection() {
   const [active, setActive] = useState(0);
   const [hovered, setHovered] = useState<number | null>(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [confettiKey, setConfettiKey] = useState(0);
+  const [burstOrigin, setBurstOrigin] = useState({ x: 0, y: 0 });
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const cell4Ref = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const startTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -53,6 +59,20 @@ export default function HeroSection() {
     };
   }, []);
 
+  useEffect(() => {
+    if (active === 3) {
+      if (cell4Ref.current && heroRef.current) {
+        const cellRect = cell4Ref.current.getBoundingClientRect();
+        const heroRect = heroRef.current.getBoundingClientRect();
+        setBurstOrigin({
+          x: cellRect.left - heroRect.left + cellRect.width / 2,
+          y: cellRect.top - heroRect.top + cellRect.height / 2,
+        });
+      }
+      setConfettiKey((prev) => prev + 1);
+    }
+  }, [active]);
+
   const handleClick = (i: number) => {
     setActive(i);
     startTimer();
@@ -61,7 +81,7 @@ export default function HeroSection() {
   const step = steps[active];
 
   return (
-    <div className="hero min-h-screen grid grid-cols-1 lg:grid-cols-2">
+    <div ref={heroRef} className="hero min-h-screen grid grid-cols-1 lg:grid-cols-2 relative">
       {/* LEFT: INTERACTIVE 4-PHOTO GRID */}
       <div className="photo-grid grid grid-cols-2 gap-[3px] bg-stone-950 relative overflow-hidden">
         {[0, 1, 2, 3].map((i) => {
@@ -93,8 +113,13 @@ export default function HeroSection() {
           return (
             <div
               key={i}
+              ref={i === 3 ? cell4Ref : undefined}
+              role="button"
+              tabIndex={0}
+              aria-label={`View ${statusTexts[i]} step`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(i); }}}
               className={`
-                relative overflow-hidden cursor-pointer group
+                relative cursor-pointer group
                 transition-all duration-500
                 ${isActive ? `ring-2 ${cellColors[i]} ring-inset` : ""}
               `}
@@ -103,8 +128,8 @@ export default function HeroSection() {
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
             >
-              {/* Photo background with real image */}
-              <div className="absolute inset-0">
+              {/* Photo background with real image — this div clips the photo */}
+              <div className="absolute inset-0 overflow-hidden">
                 <Image
                   src={cellImages[i]}
                   alt={statusTexts[i]}
@@ -199,24 +224,7 @@ export default function HeroSection() {
                 </p>
               </div>
 
-              {/* Confetti on delivered */}
-              {i === 3 && isActive && (
-                <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
-                  {Array.from({ length: 18 }).map((_, ci) => (
-                    <div
-                      key={ci}
-                      className="absolute w-1.5 h-1.5 rounded-sm animate-bounce"
-                      style={{
-                        left: `${10 + (ci * 4.5) % 80}%`,
-                        top: `${(ci * 7) % 40}%`,
-                        background: ["#E8B84B", "#C4622D", "#4ADE80", "#FFFDF9"][ci % 4],
-                        animationDelay: `${(ci * 0.1) % 0.5}s`,
-                        animationDuration: `${0.6 + (ci % 0.8)}s`,
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
+              {/* Confetti removed — hero-level burst handles this */}
             </div>
           );
         })}
@@ -226,6 +234,10 @@ export default function HeroSection() {
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
+              role="button"
+              tabIndex={0}
+              aria-label={`Go to step ${i + 1}`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(i); }}}
               onClick={() => handleClick(i)}
               className={`
                 h-1.5 rounded-full cursor-pointer transition-all duration-300
@@ -258,6 +270,10 @@ export default function HeroSection() {
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="flex items-center">
               <div
+                role="button"
+                tabIndex={0}
+                aria-label={`View step ${i + 1}: ${i === 0 ? "Collected" : i === 1 ? "In Flight" : i === 2 ? "At Hub" : "Delivered"}`}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(i); }}}
                 onClick={() => handleClick(i)}
                 className={`flex flex-col items-center gap-1 cursor-pointer ${
                   i < active ? "opacity-100" : i === active ? "opacity-100" : "opacity-50"
@@ -311,10 +327,16 @@ export default function HeroSection() {
         </div>
 
         <div className="flex gap-3 mb-12">
-          <button className="bg-[#C4622D] hover:bg-[#D97B48] text-[#FFFDF9] font-semibold px-6 py-3 rounded-md transition-all hover:-translate-y-0.5">
+          <button
+            onClick={() => router.push("/customer/shipments/new")}
+            className="bg-[#C4622D] hover:bg-[#D97B48] text-[#FFFDF9] font-semibold px-6 py-3 rounded-md transition-all hover:-translate-y-0.5"
+          >
             Get a Free Quote
           </button>
-          <button className="border border-[#E8DDD0] hover:border-[#1A1208] text-[#1A1208] font-medium px-5 py-3 rounded-md transition-all">
+          <button
+            onClick={() => router.push("/track")}
+            className="border border-[#E8DDD0] hover:border-[#1A1208] text-[#1A1208] font-medium px-5 py-3 rounded-md transition-all"
+          >
             Track a Shipment
           </button>
         </div>
@@ -334,6 +356,42 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
+
+      {/* Confetti bursts from cell 4's center across the full hero */}
+      {active === 3 && (
+        <div
+          key={confettiKey}
+          className="absolute inset-0 pointer-events-none z-50"
+          style={{ overflow: 'visible' }}
+        >
+          {Array.from({ length: 80 }).map((_, ci) => {
+            const angle = (ci / 80) * 360;
+            const distance = 150 + Math.random() * 400;
+            const dx = Math.cos((angle * Math.PI) / 180) * distance;
+            const dy = Math.sin((angle * Math.PI) / 180) * distance;
+            const colors = ['#E8B84B','#C4622D','#4ADE80','#FFFDF9','#F59E0B','#D97B48','#86EFAC'];
+            const size = 4 + Math.floor(Math.random() * 10);
+            return (
+              <div
+                key={ci}
+                style={{
+                  position: 'absolute',
+                  top: burstOrigin.y,
+                  left: burstOrigin.x,
+                  width: size,
+                  height: size,
+                  borderRadius: ci % 3 === 0 ? '50%' : '3px',
+                  background: colors[ci % colors.length],
+                  '--dx': `${dx}px`,
+                  '--dy': `${dy}px`,
+                  '--rot': `${(ci * 53) % 720 - 360}deg`,
+                  animation: `confettiBurst 1.2s ease-out ${(ci * 0.01)}s forwards`,
+                } as React.CSSProperties}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

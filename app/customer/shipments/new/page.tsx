@@ -122,15 +122,15 @@ export default function NewShipmentPage() {
         >
           Booking Confirmed!
         </h1>
-        <p className="text-[var(--muted-text)] mb-6">
+        <p className="text-gray-500 mb-6">
           Your shipment has been booked successfully.
         </p>
         <Card className="border-[var(--border-warm)] mb-6">
           <CardContent className="p-6">
-            <p className="text-xs text-[var(--muted-text)] uppercase tracking-wider mb-1">
+            <p className="text-xs text-[var(--muted-foreground)] uppercase tracking-wider mb-1">
               Tracking Number
             </p>
-            <p className="font-mono text-2xl font-bold text-[var(--ink)]">{trackingNumber}</p>
+            <p className="font-mono text-2xl font-bold text-[var(--card-foreground)]">{trackingNumber}</p>
           </CardContent>
         </Card>
         <div className="flex gap-3 justify-center">
@@ -157,7 +157,7 @@ export default function NewShipmentPage() {
         >
           Book New Shipment
         </h1>
-        <p className="text-sm text-[var(--muted-text)]">
+        <p className="text-sm text-gray-500">
           Step {step + 1} of {STEPS.length}: {STEPS[step].label}
         </p>
       </div>
@@ -174,14 +174,14 @@ export default function NewShipmentPage() {
                     ? 'bg-[var(--terra)] text-white'
                     : i < step
                     ? 'bg-[var(--terra-pale)] text-[var(--terra)] cursor-pointer'
-                    : 'bg-[var(--cream)] text-[var(--muted-text)]'
+                    : 'bg-[var(--cream)] text-gray-500'
                 }`}
               >
                 <Icon className="h-4 w-4" />
                 {s.label}
               </button>
               {i < STEPS.length - 1 && (
-                <ArrowRight className="h-3 w-3 text-[var(--muted-text)] flex-shrink-0" />
+                <ArrowRight className="h-3 w-3 text-gray-500 flex-shrink-0" />
               )}
             </div>
           );
@@ -208,11 +208,11 @@ export default function NewShipmentPage() {
                     >
                       <Icon
                         className={`h-8 w-8 mb-2 ${
-                          form.shipmentType === t.type ? 'text-[var(--terra)]' : 'text-[var(--muted-text)]'
+                          form.shipmentType === t.type ? 'text-[var(--terra)]' : 'text-gray-500'
                         }`}
                       />
-                      <p className="font-medium text-[var(--ink)]">{t.label}</p>
-                      <p className="text-xs text-[var(--muted-text)] mt-0.5">{t.desc}</p>
+                      <p className="font-semibold text-[var(--ink)]">{t.label}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{t.desc}</p>
                     </button>
                   );
                 })}
@@ -282,7 +282,7 @@ export default function NewShipmentPage() {
                 <Shield className="h-5 w-5 text-[var(--terra)]" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-[var(--ink)]">Add insurance</p>
-                  <p className="text-xs text-[var(--muted-text)]">Protect your shipment against loss or damage</p>
+                  <p className="text-xs text-gray-500">Protect your shipment against loss or damage</p>
                 </div>
                 <button
                   onClick={() => update('isInsured', !form.isInsured)}
@@ -321,8 +321,8 @@ export default function NewShipmentPage() {
                       <Badge variant="secondary">{addr.label}</Badge>
                       <span className="font-medium text-sm">{addr.name}</span>
                     </div>
-                    <p className="text-sm text-[var(--muted-text)]">{addr.address}</p>
-                    <p className="text-xs text-[var(--muted-text)]">{addr.phone}</p>
+                    <p className="text-sm text-gray-500">{addr.address}</p>
+                    <p className="text-xs text-gray-500">{addr.phone}</p>
                   </button>
                 ))}
                 <button
@@ -344,7 +344,7 @@ export default function NewShipmentPage() {
 
           {step === 3 && (
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-[var(--ink)]">Delivery Address</h2>
+              <h2 className="text-lg font-semibold text-[var(--card-foreground)]">Delivery Address</h2>
               <label className="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-[var(--border-warm)]">
                 <input
                   type="checkbox"
@@ -352,7 +352,7 @@ export default function NewShipmentPage() {
                   onChange={(e) => update('sameAsPickup', e.target.checked)}
                   className="h-4 w-4 rounded border-[var(--border-warm)] text-[var(--terra)]"
                 />
-                <span className="text-sm text-[var(--ink)]">Same as pickup address</span>
+                <span className="text-sm text-[var(--card-foreground)]">Same as pickup address</span>
               </label>
               {!form.sameAsPickup && (
                 <div className="space-y-3">
@@ -373,7 +373,7 @@ export default function NewShipmentPage() {
                         <Badge variant="secondary">{addr.label}</Badge>
                         <span className="font-medium text-sm">{addr.name}</span>
                       </div>
-                      <p className="text-sm text-[var(--muted-text)]">{addr.address}</p>
+                      <p className="text-sm text-gray-500">{addr.address}</p>
                     </button>
                   ))}
                   <button
@@ -419,7 +419,7 @@ export default function NewShipmentPage() {
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm text-[var(--muted-text)]">
+                        <p className="text-sm text-gray-500">
                           {quote.estimatedDays.min}&ndash;{quote.estimatedDays.max} days
                         </p>
                         {quote.includesCustoms && (
@@ -430,7 +430,7 @@ export default function NewShipmentPage() {
                         <p className="text-xl font-bold text-[var(--ink)]">
                           {formatCurrency(quote.price, quote.currency)}
                         </p>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px] text-[var(--muted-text)] mt-1">
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[10px] text-gray-500 mt-1">
                           <span>Base: {formatCurrency(quote.breakdown.base, quote.currency)}</span>
                           <span>Fuel: {formatCurrency(quote.breakdown.fuel, quote.currency)}</span>
                           <span>Customs: {formatCurrency(quote.breakdown.customsEstimate, quote.currency)}</span>
@@ -450,27 +450,27 @@ export default function NewShipmentPage() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <p className="text-xs text-[var(--muted-text)] uppercase tracking-wider">Shipment Type</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Shipment Type</p>
                   <p className="font-medium capitalize">{form.shipmentType || 'Not selected'}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-xs text-[var(--muted-text)] uppercase tracking-wider">Weight</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Weight</p>
                   <p className="font-medium">{form.weight ? `${form.weight} kg` : 'Not set'}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-xs text-[var(--muted-text)] uppercase tracking-wider">Description</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Description</p>
                   <p className="font-medium">{form.description || 'Not set'}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-xs text-[var(--muted-text)] uppercase tracking-wider">Declared Value</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Declared Value</p>
                   <p className="font-medium">{form.declaredValue ? `$${form.declaredValue}` : 'Not set'}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-xs text-[var(--muted-text)] uppercase tracking-wider">Insurance</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Insurance</p>
                   <p className="font-medium">{form.isInsured ? 'Yes' : 'No'}</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-xs text-[var(--muted-text)] uppercase tracking-wider">Service</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider">Service</p>
                   <p className="font-medium">
                     {quotes.find((q) => q.id === form.selectedQuote)?.serviceName || 'Not selected'}
                   </p>
@@ -492,7 +492,7 @@ export default function NewShipmentPage() {
                   >
                     <Wallet className="h-5 w-5 text-[var(--terra)] mb-2" />
                     <p className="font-medium text-sm">Wallet</p>
-                    <p className="text-xs text-[var(--muted-text)]">
+                    <p className="text-xs text-gray-500">
                       Balance: {formatCurrency(wallet.balanceUSD, 'USD')}
                     </p>
                   </button>
@@ -506,7 +506,7 @@ export default function NewShipmentPage() {
                   >
                     <CreditCard className="h-5 w-5 text-[var(--terra)] mb-2" />
                     <p className="font-medium text-sm">Card</p>
-                    <p className="text-xs text-[var(--muted-text)]">Visa, Mastercard</p>
+                    <p className="text-xs text-gray-500">Visa, Mastercard</p>
                   </button>
                 </div>
               </div>

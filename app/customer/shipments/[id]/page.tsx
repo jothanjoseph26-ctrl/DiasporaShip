@@ -88,13 +88,13 @@ export default function ShipmentDetailPage() {
           <div className="flex items-center gap-3 mb-2">
             <h1
               style={{ fontFamily: 'var(--font-playfair)' }}
-              className="text-2xl font-bold text-[var(--ink)] font-mono"
+              className="text-2xl font-bold text-[var(--card-foreground)] font-mono"
             >
               {shipment.trackingNumber}
             </h1>
             <button
               onClick={handleCopy}
-              className="text-[var(--muted-text)] hover:text-[var(--terra)] transition-colors"
+              className="text-[var(--muted-foreground)] hover:text-[var(--terra)] transition-colors"
               title="Copy tracking number"
             >
               {copied ? (
@@ -118,11 +118,11 @@ export default function ShipmentDetailPage() {
             >
               {getStatusLabel(shipment.status)}
             </Badge>
-            <span className="text-sm text-[var(--muted-text)] capitalize">
+            <span className="text-sm text-[var(--muted-foreground)] capitalize">
               {shipment.serviceType.replace('_', ' ')}
             </span>
-            <span className="text-sm text-[var(--muted-text)]">&middot;</span>
-            <span className="text-sm text-[var(--muted-text)]">
+            <span className="text-sm text-[var(--muted-foreground)]">&middot;</span>
+            <span className="text-sm text-[var(--muted-foreground)]">
               Created {formatDate(shipment.createdAt)}
             </span>
           </div>
@@ -153,8 +153,8 @@ export default function ShipmentDetailPage() {
       <Card className="border-[var(--border-warm)]">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-sm font-medium text-[var(--ink)]">Journey Progress</span>
-            <span className="text-xs text-[var(--muted-text)]">{Math.round(progress)}%</span>
+            <span className="text-sm font-medium text-[var(--card-foreground)]">Journey Progress</span>
+            <span className="text-xs text-[var(--muted-foreground)]">{Math.round(progress)}%</span>
           </div>
           <Progress value={progress} className="h-2 mb-4" />
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
@@ -164,7 +164,7 @@ export default function ShipmentDetailPage() {
                 className={`text-center p-2 rounded-lg text-xs font-medium transition-colors ${
                   index <= currentIndex
                     ? 'bg-[var(--terra-pale)] text-[var(--terra)] border border-[var(--terra)]/20'
-                     : 'bg-[var(--cream)] text-gray-500'
+                     : 'bg-[var(--cream)] text-[var(--muted-foreground)]'
                 }`}
               >
                 {getStatusLabel(status)}
@@ -177,25 +177,25 @@ export default function ShipmentDetailPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-[var(--border-warm)]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+            <CardTitle className="text-sm font-semibold text-[var(--card-foreground)] flex items-center gap-2">
               <MapPin className="h-4 w-4 text-[var(--terra)]" />
               Pickup Address
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="font-medium text-[var(--ink)]">{shipment.pickupAddress.recipientName}</p>
-            <p className="text-sm text-[var(--muted-text)]">{shipment.pickupAddress.addressLine1}</p>
+            <p className="font-medium text-[var(--card-foreground)]">{shipment.pickupAddress.recipientName}</p>
+            <p className="text-sm text-[var(--muted-foreground)]">{shipment.pickupAddress.addressLine1}</p>
             {shipment.pickupAddress.addressLine2 && (
-              <p className="text-sm text-[var(--muted-text)]">{shipment.pickupAddress.addressLine2}</p>
+              <p className="text-sm text-[var(--muted-foreground)]">{shipment.pickupAddress.addressLine2}</p>
             )}
-            <p className="text-sm text-[var(--muted-text)]">
+            <p className="text-sm text-[var(--muted-foreground)]">
               {shipment.pickupAddress.city}, {shipment.pickupAddress.stateProvince}{' '}
               {shipment.pickupAddress.postalCode}
             </p>
-            <p className="text-sm text-[var(--muted-text)]">
+            <p className="text-sm text-[var(--muted-foreground)]">
               {COUNTRY_FLAGS[shipment.pickupAddress.country]} {shipment.pickupAddress.country}
             </p>
-            <p className="text-sm text-[var(--muted-text)] mt-2">
+            <p className="text-sm text-[var(--muted-foreground)] mt-2">
               {shipment.pickupAddress.recipientPhone}
             </p>
           </CardContent>
@@ -203,25 +203,25 @@ export default function ShipmentDetailPage() {
 
         <Card className="border-[var(--border-warm)]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+            <CardTitle className="text-sm font-semibold text-[var(--card-foreground)] flex items-center gap-2">
               <MapPin className="h-4 w-4 text-green-600" />
               Delivery Address
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="font-medium text-[var(--ink)]">{shipment.deliveryAddress.recipientName}</p>
-            <p className="text-sm text-[var(--muted-text)]">{shipment.deliveryAddress.addressLine1}</p>
+            <p className="font-medium text-[var(--card-foreground)]">{shipment.deliveryAddress.recipientName}</p>
+            <p className="text-sm text-[var(--muted-foreground)]">{shipment.deliveryAddress.addressLine1}</p>
             {shipment.deliveryAddress.addressLine2 && (
-              <p className="text-sm text-[var(--muted-text)]">{shipment.deliveryAddress.addressLine2}</p>
+              <p className="text-sm text-[var(--muted-foreground)]">{shipment.deliveryAddress.addressLine2}</p>
             )}
-            <p className="text-sm text-[var(--muted-text)]">
+            <p className="text-sm text-[var(--muted-foreground)]">
               {shipment.deliveryAddress.city}, {shipment.deliveryAddress.stateProvince}{' '}
               {shipment.deliveryAddress.postalCode}
             </p>
-            <p className="text-sm text-[var(--muted-text)]">
+            <p className="text-sm text-[var(--muted-foreground)]">
               {COUNTRY_FLAGS[shipment.deliveryAddress.country]} {shipment.deliveryAddress.country}
             </p>
-            <p className="text-sm text-[var(--muted-text)] mt-2">
+            <p className="text-sm text-[var(--muted-foreground)] mt-2">
               {shipment.deliveryAddress.recipientPhone}
             </p>
           </CardContent>
@@ -231,49 +231,49 @@ export default function ShipmentDetailPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-[var(--border-warm)]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+            <CardTitle className="text-sm font-semibold text-[var(--card-foreground)] flex items-center gap-2">
               <Package className="h-4 w-4 text-[var(--terra)]" />
               Package Details
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-[var(--ink)]">{shipment.packageDescription}</p>
+            <p className="text-sm text-[var(--card-foreground)]">{shipment.packageDescription}</p>
             <Separator />
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
-                    <p className="text-[var(--ink)] text-xs">Type</p>
-                <p className="font-medium text-[var(--ink)] capitalize">{shipment.shipmentType}</p>
+                    <p className="text-[var(--muted-foreground)] text-xs">Type</p>
+                <p className="font-medium text-[var(--card-foreground)] capitalize">{shipment.shipmentType}</p>
               </div>
               <div>
-                <p className="text-[var(--ink)] text-xs flex items-center gap-1">
+                <p className="text-[var(--muted-foreground)] text-xs flex items-center gap-1">
                   <Weight className="h-3 w-3" /> Weight
                 </p>
-                <p className="font-medium text-[var(--ink)]">{shipment.weightKg} kg</p>
+                <p className="font-medium text-[var(--card-foreground)]">{shipment.weightKg} kg</p>
               </div>
               {shipment.lengthCm && (
                 <div>
-                  <p className="text-[var(--ink)] text-xs flex items-center gap-1">
+                  <p className="text-[var(--muted-foreground)] text-xs flex items-center gap-1">
                     <Ruler className="h-3 w-3" /> Dimensions
                   </p>
-                  <p className="font-medium text-[var(--ink)]">
+                  <p className="font-medium text-[var(--card-foreground)]">
                     {shipment.lengthCm} &times; {shipment.widthCm} &times; {shipment.heightCm} cm
                   </p>
                 </div>
               )}
               <div>
-                <p className="text-[var(--ink)] text-xs">Declared Value</p>
-                <p className="font-medium text-[var(--ink)]">{formatCurrency(shipment.declaredValue, shipment.currency)}</p>
+                <p className="text-[var(--muted-foreground)] text-xs">Declared Value</p>
+                <p className="font-medium text-[var(--card-foreground)]">{formatCurrency(shipment.declaredValue, shipment.currency)}</p>
               </div>
               <div>
-                <p className="text-[var(--ink)] text-xs flex items-center gap-1">
+                <p className="text-[var(--muted-foreground)] text-xs flex items-center gap-1">
                   <Shield className="h-3 w-3" /> Insurance
                 </p>
-                <p className="font-medium text-[var(--ink)]">{shipment.isInsured ? 'Yes' : 'No'}</p>
+                <p className="font-medium text-[var(--card-foreground)]">{shipment.isInsured ? 'Yes' : 'No'}</p>
               </div>
               {shipment.hsCode && (
                 <div>
-                  <p className="text-[var(--ink)] text-xs">HS Code</p>
-                  <p className="font-mono font-medium text-[var(--ink)]">{shipment.hsCode}</p>
+                  <p className="text-[var(--muted-foreground)] text-xs">HS Code</p>
+                  <p className="font-mono font-medium text-[var(--card-foreground)]">{shipment.hsCode}</p>
                 </div>
               )}
             </div>
@@ -282,7 +282,7 @@ export default function ShipmentDetailPage() {
 
         <Card className="border-[var(--border-warm)]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+            <CardTitle className="text-sm font-semibold text-[var(--card-foreground)] flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-[var(--terra)]" />
               Cost Breakdown
             </CardTitle>
@@ -290,27 +290,27 @@ export default function ShipmentDetailPage() {
           <CardContent>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Base shipping</span>
-                <span className="font-medium text-[var(--ink)]">{formatCurrency(shipment.shippingCost, shipment.currency)}</span>
+                <span className="text-[var(--muted-foreground)]">Base shipping</span>
+                <span className="font-medium text-[var(--card-foreground)]">{formatCurrency(shipment.shippingCost, shipment.currency)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Fuel surcharge</span>
-                <span className="font-medium text-[var(--ink)]">{formatCurrency(shipment.totalCost * 0.1, shipment.currency)}</span>
+                <span className="text-[var(--muted-foreground)]">Fuel surcharge</span>
+                <span className="font-medium text-[var(--card-foreground)]">{formatCurrency(shipment.totalCost * 0.1, shipment.currency)}</span>
               </div>
               {shipment.customsDuties > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Customs & duties</span>
-                  <span className="font-medium text-[var(--ink)]">{formatCurrency(shipment.customsDuties, shipment.currency)}</span>
+                  <span className="text-[var(--muted-foreground)]">Customs & duties</span>
+                  <span className="font-medium text-[var(--card-foreground)]">{formatCurrency(shipment.customsDuties, shipment.currency)}</span>
                 </div>
               )}
               {shipment.isInsured && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Insurance</span>
-                  <span className="font-medium text-[var(--ink)]">{formatCurrency(shipment.insuranceCost, shipment.currency)}</span>
+                  <span className="text-[var(--muted-foreground)]">Insurance</span>
+                  <span className="font-medium text-[var(--card-foreground)]">{formatCurrency(shipment.insuranceCost, shipment.currency)}</span>
                 </div>
               )}
               <Separator />
-              <div className="flex justify-between font-semibold text-[var(--ink)]">
+              <div className="flex justify-between font-semibold text-[var(--card-foreground)]">
                 <span>Total</span>
                 <span>{formatCurrency(shipment.totalCost, shipment.currency)}</span>
               </div>
@@ -329,7 +329,7 @@ export default function ShipmentDetailPage() {
 
       <Card className="border-[var(--border-warm)]">
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+          <CardTitle className="text-sm font-semibold text-[var(--card-foreground)] flex items-center gap-2">
             <FileText className="h-4 w-4 text-[var(--terra)]" />
             Documents
           </CardTitle>
@@ -344,8 +344,8 @@ export default function ShipmentDetailPage() {
                 <div className="flex items-center gap-3">
                   <FileText className="h-4 w-4 text-[var(--terra)]" />
               <div>
-                <p className="text-sm font-medium text-[var(--ink)]">{doc.documentType.replace(/_/g, ' ')}</p>
-                <p className="text-xs text-gray-600">{doc.fileName}</p>
+                <p className="text-sm font-medium text-[var(--card-foreground)]">{doc.documentType.replace(/_/g, ' ')}</p>
+                <p className="text-xs text-[var(--muted-foreground)]">{doc.fileName}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -364,7 +364,7 @@ export default function ShipmentDetailPage() {
 
       <Card className="border-[var(--border-warm)]">
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+          <CardTitle className="text-sm font-semibold text-[var(--card-foreground)] flex items-center gap-2">
             <Clock className="h-4 w-4 text-[var(--terra)]" />
             Tracking Timeline
           </CardTitle>
@@ -387,8 +387,8 @@ export default function ShipmentDetailPage() {
                     )}
                   </div>
                   <div className="pb-4">
-                    <p className="text-sm font-medium text-[var(--ink)]">{event.description}</p>
-                    <div className="flex items-center gap-2 text-xs text-[var(--muted-text)] mt-1">
+                    <p className="text-sm font-medium text-[var(--card-foreground)]">{event.description}</p>
+                    <div className="flex items-center gap-2 text-xs text-[var(--muted-foreground)] mt-1">
                       <span>{formatDateTime(event.occurredAt)}</span>
                       <span>&middot;</span>
                       <span>{event.locationName}</span>

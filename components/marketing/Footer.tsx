@@ -2,28 +2,30 @@ import Link from "next/link";
 import Image from "next/image";
 
 const shipLinks = [
-  { label: "Get a Quote", href: "/customer" },
-  { label: "Book a Pickup", href: "/customer" },
+  { label: "Get a Quote", href: "/customer/shipments/new" },
+  { label: "Book a Pickup", href: "/customer/shipments/new" },
   { label: "Track Shipment", href: "/track" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Packaging Guide", href: "#" },
+  { label: "Packaging Guide", href: "/guides/packaging" },
 ];
 
 const companyLinks = [
   { label: "About Us", href: "/about" },
   { label: "Corridors", href: "/about#corridors" },
-  { label: "For Business", href: "#" },
-  { label: "Careers", href: "#" },
-  { label: "Blog", href: "#" },
+  { label: "For Business", href: "/contact" },
+  { label: "Careers", href: "/contact" },
+  { label: "Blog", href: "/contact" },
 ];
 
 const supportLinks = [
-  { label: "Help Center", href: "#" },
-  { label: "WhatsApp Support", href: "#" },
+  { label: "Help Center", href: "/contact" },
+  { label: "WhatsApp Support", href: "https://wa.me/14045551234", external: true },
   { label: "Contact Us", href: "/contact" },
   { label: "Terms of Service", href: "/legal/terms" },
   { label: "Privacy Policy", href: "/legal/privacy" },
 ];
+
+const currentYear = 2026;
 
 export function Footer() {
   return (
@@ -35,10 +37,10 @@ export function Footer() {
             Premium door-to-door logistics connecting the African diaspora to home. US, UK, and Canada to Nigeria, Ghana, and Kenya.
           </p>
           <div className="flex gap-2.5">
-            <a href="#" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">𝕏</a>
-            <a href="#" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">in</a>
-            <a href="#" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">f</a>
-            <a href="#" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">📷</a>
+            <a href="https://twitter.com/diasporaship" target="_blank" rel="noopener noreferrer" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">𝕏</a>
+            <a href="https://linkedin.com/company/diasporaship" target="_blank" rel="noopener noreferrer" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">in</a>
+            <a href="https://facebook.com/diasporaship" target="_blank" rel="noopener noreferrer" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">f</a>
+            <a href="https://instagram.com/diasporaship" target="_blank" rel="noopener noreferrer" className="w-8.5 h-8.5 rounded-lg bg-white/6 border border-white/8 flex items-center justify-center text-[14px] text-white/50 hover:bg-white/12 transition-colors">📷</a>
           </div>
         </div>
 
@@ -73,9 +75,15 @@ export function Footer() {
           <ul className="flex flex-col gap-2.75 list-none">
             {supportLinks.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className="text-[14px] text-white/50 hover:text-white transition-colors">
-                  {link.label}
-                </Link>
+                {link.external ? (
+                  <a href={link.href} target="_blank" rel="noopener noreferrer" className="text-[14px] text-white/50 hover:text-white transition-colors">
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link href={link.href} className="text-[14px] text-white/50 hover:text-white transition-colors">
+                    {link.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -83,7 +91,7 @@ export function Footer() {
       </div>
 
       <div className="flex justify-between items-center pt-7 border-t border-white/6">
-        <span className="text-[12px] text-white/25">© 2025 DiasporaShip Inc. All rights reserved.</span>
+        <span className="text-[12px] text-white/25">© {currentYear} DiasporaShip Inc. All rights reserved.</span>
         <div className="flex gap-1.5">
           <span className="text-[11px] font-medium text-white/30 bg-white/5 border border-white/8 px-2.5 py-1 rounded">🇺🇸 US</span>
           <span className="text-[11px] font-medium text-white/30 bg-white/5 border border-white/8 px-2.5 py-1 rounded">🇬🇧 UK</span>

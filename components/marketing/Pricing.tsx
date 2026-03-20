@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 const plans = [
   {
@@ -52,6 +53,7 @@ const plans = [
 
 export function Pricing() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -133,6 +135,7 @@ export function Pricing() {
             </div>
 
             <button
+              onClick={() => router.push(plan.tier === 'Business' ? '/contact' : '/customer/shipments/new')}
               className={`w-full py-3.5 rounded-lg text-[14px] font-semibold transition-all duration-200 ${
                 plan.featured
                   ? "bg-[#C4622D] border border-[#C4622D] text-[#FFFDF9] hover:bg-[#D97B48]"

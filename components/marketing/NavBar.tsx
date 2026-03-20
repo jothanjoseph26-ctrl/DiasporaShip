@@ -4,11 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 const navLinks = [
-  { label: "How it works", href: "#how-it-works" },
-  { label: "Corridors", href: "#corridors" },
-  { label: "Business", href: "#business" },
-  { label: "Track", href: "/customer/track" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "How it works", href: "/about" },
+  { label: "Corridors", href: "/about#corridors" },
+  { label: "Track", href: "/track" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function NavBar() {

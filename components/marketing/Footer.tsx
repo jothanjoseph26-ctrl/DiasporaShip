@@ -4,15 +4,15 @@ import Image from "next/image";
 const shipLinks = [
   { label: "Get a Quote", href: "/customer" },
   { label: "Book a Pickup", href: "/customer" },
-  { label: "Track Shipment", href: "/customer/track" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Track Shipment", href: "/track" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Packaging Guide", href: "#" },
 ];
 
 const companyLinks = [
-  { label: "About Us", href: "#" },
-  { label: "Corridors", href: "#corridors" },
-  { label: "For Business", href: "#business" },
+  { label: "About Us", href: "/about" },
+  { label: "Corridors", href: "/about#corridors" },
+  { label: "For Business", href: "#" },
   { label: "Careers", href: "#" },
   { label: "Blog", href: "#" },
 ];
@@ -20,9 +20,9 @@ const companyLinks = [
 const supportLinks = [
   { label: "Help Center", href: "#" },
   { label: "WhatsApp Support", href: "#" },
-  { label: "Contact Us", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "Privacy Policy", href: "#" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "Terms of Service", href: "/legal/terms" },
+  { label: "Privacy Policy", href: "/legal/privacy" },
 ];
 
 export function Footer() {

@@ -1,0 +1,588 @@
+
+
+
+UI DESIGN SPECIFICATION
+DiasporaShip
+Complete UI Design System — All 8 Portals
+
+Document Type: UI Design Specification — Visual & Component Reference
+Version: 1.0  |  Stack: Next.js 16 · React 19 · Tailwind CSS 4 · shadcn/ui
+Covers: Design Tokens · Typography · Grid · Components · All 8 Portal Screens
+Status Badges · Icon Library · Forms · States · Responsive Breakpoints
+
+
+ 
+1. Design Tokens — Color System
+All colors are defined as CSS custom properties in globals.css and mapped to Tailwind in tailwind.config.ts. Never use raw hex values in components — always reference tokens.
+
+1.1 Primary Brand Palette
+Swatch	Token	Hex	Usage
+ 	--terra	#C4622D	Primary CTA buttons, active nav, links, accents
+ 	--terra-light	#D97B48	Hover state for terra, sidebar active text
+ 	--terra-pale	#F5EBE0	KPI icon backgrounds, table hover, muted sections
+ 	--terra-dark	#8B3D18	Pressed state, dark text on pale bg
+ 	--gold	#C9972B	Secondary accent, agent portal, star ratings
+ 	--gold-light	#E8B84B	Hover state for gold, progress fills, in-flight status
+ 	--gold-pale	#FBF3DC	Gold backgrounds, pending status bg, toast bg
+ 	--ink	#1A1208	Sidebar bg, hero panel, all dark surfaces
+ 	--ink-soft	#2D1F10	Dark card bg, elevated dark surfaces
+ 	--cream	#FAF6EF	Page background, app background
+ 	--warm-white	#FFFDF9	Card bg, topbar bg, input bg, modal bg
+ 	--muted-text	#8C7B6B	Placeholders, secondary labels, timestamps
+ 	--border-warm	#E8DDD0	All borders, dividers, table lines
+
+1.2 Portal Accent Colors
+Each of the 8 portals has a unique accent color for active nav items, icon highlights, and portal identity. All portals share the same sidebar ink background.
+
+Portal	CSS Variable	Hex	Tailwind Class	Usage
+Customer	--accent-customer	#C4622D	portal-customer	Active nav, primary buttons
+Driver	--accent-driver	#059669	portal-driver	Active nav, delivery confirmations
+Dispatch	--accent-dispatch	#2563EB	portal-dispatch	Active nav, live map pins, routes
+Admin	--accent-admin	#C4622D	portal-admin	Active nav — same as Customer
+Warehouse	--accent-warehouse	#7C3AED	portal-warehouse	Active nav, scan indicators
+Agent	--accent-agent	#C9972B	portal-agent	Active nav — gold, commission
+Customs	--accent-customs	#0891B2	portal-customs	Active nav, document status
+Analytics	--accent-analytics	#DB2777	portal-analytics	Active nav, chart highlights
+
+1.3 Semantic Colors
+Purpose	Token	Hex	When to Use
+Success	--color-success	#15803D	Delivered status, wallet credit, driver online
+Success bg	--color-success-bg	#DCFCE7	Success badge background
+Warning	--color-warning	#854D0E	Pending status, customs hold, fuel low
+Warning bg	--color-warning-bg	#FEF9C3	Warning badge background
+Danger	--color-danger	#DC2626	Failed delivery, cancelled, low balance, errors
+Danger bg	--color-danger-bg	#FEE2E2	Danger badge background
+Info	--color-info	#1D4ED8	In transit, neutral informational states
+Info bg	--color-info-bg	#DBEAFE	Info badge background
+
+ 
+2. Typography System
+2.1 Font Families
+Role	Family	Variable	Fallback	When to Use
+Display / Heading	Playfair Display	--font-playfair	Georgia, serif	Page titles, portal names, hero text, KPI values, card titles
+Body / UI	Instrument Sans	--font-instrument	system-ui, sans-serif	All body text, nav labels, table data, form inputs, badges
+Monospace	JetBrains Mono	--font-mono	Courier New, monospace	Tracking numbers, API keys, code snippets, amounts
+
+2.2 Type Scale
+Name	Size	Weight	Line Height	Letter Spacing	Tailwind / CSS Class	Usage
+Display XL	56px	900	1.04	-0.04em	heading-xl / text-5xl font-playfair	Hero headline, homepage H1
+Display LG	44px	700	1.08	-0.03em	heading-lg / text-4xl font-playfair	Section titles, portal H1
+Display MD	32px	700	1.1	-0.02em	heading-md / text-3xl font-playfair	Card titles, dashboard headers
+Display SM	22px	700	1.2	-0.01em	text-xl font-playfair	Widget titles, modal headers
+Body LG	17px	400	1.75	0	text-lg font-instrument	Hero subtext, long descriptions
+Body MD	15px	400	1.7	0	text-base font-instrument	Standard body text, card descriptions
+Body SM	13px	400	1.6	0	text-sm font-instrument	Secondary text, nav items, table data
+Caption	11px	500	1.5	0.06em	text-xs font-instrument uppercase	Section labels, badge text, timestamps
+Mono MD	13px	400	1.6	0	text-sm font-mono	Tracking numbers, amounts, codes
+Mono SM	11px	400	1.5	0	text-xs font-mono	Short codes, IDs in table cells
+
+2.3 Eyebrow Label Pattern
+Used above every major section heading across all portals and the marketing site.
+/* CSS */
+.eyebrow {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--terra); display: flex; align-items: center; gap: 10px;
+}
+.eyebrow::before { content: ""; width: 24px; height: 1.5px; background: var(--terra); }
+
+2.4 Heading Hierarchy in Portals
+•	H1 — Page title in topbar: Playfair Display 700 16px, color: --ink
+•	H2 — Section title inside page: Playfair Display 700 20px, color: --ink, bottom-border: 1.5px --terra
+•	H3 — Card/widget title: Playfair Display 700 16px, color: --ink
+•	H4 — Sub-section label: Instrument Sans 600 13px, color: --terra, uppercase, letter-spacing 0.08em
+•	Body — Content text: Instrument Sans 400 13-14px, color: --ink
+•	Muted — Secondary text: Instrument Sans 400 12px, color: --muted-text
+
+ 
+3. Grid System & Spacing
+3.1 Layout Grid
+Zone	Width	Notes
+Sidebar	240px fixed	Collapsible to 0 on mobile. Always ink background.
+Topbar	100% - 240px	56px height. Sticky. Warm-white background.
+Content area	100% - 240px	Padding: 24px all sides. Scrollable. Cream background.
+Max content	none	Portals are full-width. No max-width constraint on tables.
+Modal	480px / 640px	480px for simple forms, 640px for multi-step wizards.
+Right panel	320-380px	Activity feeds, detail panels docked to right of main content.
+
+3.2 Spacing Scale
+All spacing uses multiples of 4px. The following values are used throughout the system:
+Token	Value	Tailwind	Primary Usage
+space-1	4px	p-1	Icon padding, tight internal gaps
+space-2	8px	p-2	Badge padding, small gaps between elements
+space-3	12px	p-3	Nav item padding, compact card padding
+space-4	16px	p-4	Standard card padding (horizontal)
+space-5	20px	p-5	Standard card padding (vertical + horizontal)
+space-6	24px	p-6	Page content padding, section gaps
+space-8	32px	p-8	Large section padding, modal padding
+space-10	40px	p-10	Hero section internal padding
+space-12	48px	p-12	Section vertical padding on marketing site
+space-16	64px	p-16	Large section spacing, hero padding top/bottom
+
+3.3 Dashboard Grid Layouts
+4-column KPI row (standard)
+grid-template-columns: repeat(4, 1fr)
+gap: 16px
+/* Used on: Admin dashboard, Customer dashboard, Analytics */
+
+2-column split (chart + sidebar)
+grid-template-columns: 1fr 320px
+gap: 16px
+/* Used on: Revenue chart + Corridor breakdown, Shipment table + Activity feed */
+
+3-column equal (pricing, features)
+grid-template-columns: repeat(3, 1fr)
+gap: 16px
+/* Used on: Pricing cards, feature grids on marketing site */
+
+2-column hero (marketing site)
+grid-template-columns: 1fr 1fr
+min-height: 100vh
+/* Photo panel left, text right */
+
+3.4 Responsive Breakpoints
+Breakpoint	Width	Tailwind Prefix	Behavior
+Mobile	<640px	default	Single column. Sidebar hidden. Bottom tab nav on mobile app.
+Tablet	640px	sm:	Sidebar collapses to icon-only. Tables scroll horizontally.
+Laptop	1024px	lg:	Full sidebar visible. 4-col KPI grid. Standard layout.
+Desktop	1280px	xl:	Wider content area. Side panels visible alongside content.
+Wide	1536px	2xl:	Maximum comfort layout. No further changes beyond this.
+
+ 
+4. Component Design Specifications
+4.1 Buttons
+Variant	Background	Text	Border	Hover	Height	Padding	Usage
+Primary (terra)	--terra	--warm-white	none	--terra-light + translateY(-1px)	40px	13px 26px	Primary actions: Ship Now, Get Quote, Save, Confirm
+Secondary (outline)	transparent	--ink	1.5px --border-warm	border: --ink	38px	12px 22px	Secondary actions: Cancel, Back, Edit
+Ghost	transparent	--muted-text	none	bg: --terra-pale, text: --terra	36px	8px 14px	Tertiary: View All, See more, icon buttons
+Gold	--gold	--ink	none	--gold-light	40px	13px 26px	Agent portal primary, COD actions
+Danger	#DC2626	white	none	#B91C1C	40px	13px 26px	Delete, Cancel shipment, Revoke access
+Icon only	transparent	--muted-text	none	bg: --terra-pale	36px	8px	Topbar icons, table row actions
+
+	All buttons use border-radius: 6px. Loading state replaces button text with a 14px spinner + "Loading..." text. Disabled state: 50% opacity, cursor: not-allowed.
+
+4.2 KPI Cards
+Used in all portal dashboards. Always 4 per row on desktop, 2 per row on tablet, 1 per row on mobile.
+
+Element	Spec	Notes
+Container	bg: --warm-white, border: 1px --border-warm, radius: 12px, shadow: card	Hover: translateY(-1px), shadow-md
+Icon wrap	40x40px, radius: 10px	Color variant: terra, gold, green, blue, purple, cyan (see Section 1.3)
+Icon size	17px Lucide icon	Centered in icon wrap
+Value	Playfair Display 700 28px, color: --ink	Bold number, formatted (toLocaleString)
+Label	Instrument Sans 500 12px, color: --muted-text	Below value, margin-top: 4px
+Trend	11px 600, flex row with icon, gap: 3px	Green + TrendingUp for positive, Red + TrendingDown for negative
+Padding	20px 22px all sides	
+Min height	auto	Cards stretch to tallest in row
+
+4.3 Shipment Cards (Customer Portal)
+Used in the customer shipment list on mobile and as expandable rows on web.
+Element	Spec
+Container	bg: --warm-white, border: 1px --border-warm, radius: 12px, padding: 16px
+Top row	Tracking number (font-mono 12px --terra) left, Status badge right
+Route row	Origin city → Destination city, Instrument Sans 13px --muted-text, gap: 8px with arrow icon
+Middle row	Courier logo (24x24px) + courier name left, estimated days right
+Bottom row	Date shipped left, Total amount (font-mono 600 14px) right
+Border left	3px solid [status color] — visual status indicator on left edge
+Hover	border-color: --terra, box-shadow: 0 4px 16px rgba(26,18,8,0.08)
+Click	Navigate to shipment detail page
+
+4.4 Tracking Timeline Component
+Used on Shipment Detail screen. Vertical list, newest event at top.
+Element	Spec
+Container	Full width, no card wrapper — lives inside shipment detail card
+Event item	display: flex, gap: 14px, padding: 14px 0, border-bottom: 1px --border-warm
+Icon column	36px wide. Circle icon 28px diameter, stroke 1.5px
+Icon: done	bg: --terra, color: white, checkmark icon
+Icon: active	bg: white, border: 2px --gold, color: --gold, animated dot inside
+Icon: pending	bg: transparent, border: 1.5px --border-warm, color: --muted-text
+Connector line	1px --border-warm between icons, height fills gap between items
+Event text	Instrument Sans 500 13px --ink. Location in 500 weight, description in 400 weight
+Timestamp	11px --muted-text, margin-top: 3px
+Live badge	Only on the active event: 10px amber badge "Live update" with pulsing dot
+
+4.5 Wallet Card Component
+Used on Customer wallet screen and customer dashboard. Displays multi-currency balances.
+Element	Spec
+Container	bg: --ink, border-radius: 16px, padding: 28px
+Header	"My Wallet" in Playfair 700 18px --warm-white, left aligned
+Currency tabs	USD · NGN · GHS · KES — pill tabs, active: bg --terra text --warm-white, inactive: rgba(255,253,249,0.08)
+Balance	Playfair Display 900 40px --warm-white. Formatted with currency symbol.
+Balance label	12px rgba(255,253,249,0.45), "Available balance"
+Action row	"Fund Wallet" btn (gold, 100% width) + "Withdraw" ghost btn below
+Mini stats	3 stats at bottom: Total in, Total out, This month — in 3-col grid, text --warm-white
+Separator	1px rgba(255,253,249,0.1) above mini stats
+
+4.6 Live Fleet Map Panel (Dispatch Portal)
+Element	Spec
+Container	Full height of content area minus topbar. No padding — map is edge-to-edge.
+Map provider	Google Maps API dark mode style. Base: #1A1208. Roads: rgba(255,253,249,0.15).
+Driver markers	Custom SVG pin. Online: green (#059669). On trip: --terra. Offline: gray.
+Shipment pins	Orange dot for pending pickup, purple for in-transit, green for delivered.
+Driver panel	Right side drawer 320px. Slides in on driver marker click. Shows driver info, current job, contact.
+Control bar	Floating toolbar top-left: country filter, status filter, refresh, fullscreen toggle.
+Stats overlay	Top-right card: Online drivers count, Active trips, Unassigned jobs — updates every 30s.
+Assign btn	"Assign Job" terra button in driver panel. Triggers job assignment flow.
+
+4.7 Data Tables
+Shared table pattern across admin, dispatch, customs, and agent portals.
+Element	Spec
+Header row	bg: --ink, text: --warm-white, 11px 600 uppercase, letter-spacing: 0.06em, padding: 10px 14px
+Body rows	Alternating: --gray-50 / --warm-white. Hover: --terra-pale. Cursor: pointer.
+Row height	Min 48px. Content determines height. Vertical padding: 12px 14px per cell.
+Cell text	Instrument Sans 400 13.5px --ink. Important cells (amounts, IDs) in 500 weight.
+Tracking IDs	font-mono 12px --terra. Only last 6 chars shown with ellipsis for long IDs.
+Sort headers	Click to sort. Shows up/down chevron icon. Active sort: --terra colored header.
+Pagination	Bottom: "Showing X-Y of Z" left, prev/next buttons right. 20 rows per page default.
+Empty state	Centered in table body: icon 40px, title Playfair 16px, description 13px --muted-text.
+Loading state	Skeleton rows: 5 rows of animated shimmer bars at 60-90% width.
+Row actions	Rightmost cell: 3-dot menu or action icon buttons. Appear on row hover.
+Export btn	Top-right of table card: "Export CSV" ghost button with download icon.
+
+4.8 Form Components
+Input Fields
+State	Border	Background	Label	Notes
+Default	1.5px --border-warm	--warm-white	Instrument Sans 11px 600 uppercase --muted-text above field	Placeholder: --muted-text 70% opacity
+Focus	1.5px --terra	--warm-white	Label color unchanged	box-shadow: 0 0 0 3px rgba(196,98,45,0.12)
+Error	1.5px #DC2626	#FEF2F2	Label turns red	Error message below: 11px red, with alert-circle icon
+Disabled	1px --border-warm	--cream	Label: 40% opacity	cursor: not-allowed, text: --muted-text
+Success	1.5px #16A34A	#F0FDF4	Label unchanged	Check icon appears inside field right side
+
+Select Dropdowns
+•	Same visual as Input in default/focus/error/disabled states
+•	Dropdown panel: bg --warm-white, border 1px --border-warm, radius 8px, shadow-lg
+•	Options: 40px height, 13px text, hover bg: --terra-pale
+•	Selected option: checkmark icon right, text: --terra
+•	Searchable for lists > 8 items: search input at top of dropdown panel
+
+Multi-Step Wizard (New Shipment)
+•	Step indicator: horizontal bar, 6 steps. Done: --terra filled circle with check. Active: --terra ring. Pending: --border-warm ring.
+•	Progress line between steps: done = --terra, pending = --border-warm
+•	Step labels: 10px below circles, done = --ink 500, active = --terra 600, pending = --muted-text
+•	Content area: single card --warm-white, padding: 32px, radius: 16px
+•	Bottom nav: "Back" ghost btn left, "Continue" / "Pay" terra btn right
+•	Validation: inline errors appear on "Continue" click if fields invalid
+•	State persists in Zustand store — refreshing page returns user to current step
+
+ 
+5. Status Badge System
+5.1 Shipment Status Badges
+All 18 shipment statuses have defined badge colors. Badges appear in tables, shipment cards, and detail screens.
+
+	Status	Badge Text	Colors (bg / text)	CSS Class
+	draft	Draft	#FBF3DC / #854D0E	.badge-pending
+	pending	Pending Pickup	#FBF3DC / #854D0E	.badge-pending
+	pickup-assign	Pickup Assigned	#DBEAFE / #1E40AF	.badge-picked-up
+	picked-up	Picked Up	#DBEAFE / #1E40AF	.badge-picked-up
+	at-warehouse	At Warehouse	#F5EBE0 / #8B3D18	.badge-at-warehouse
+	processing	Processing	#F5EBE0 / #8B3D18	.badge-at-warehouse
+	in-transit	In Transit	#EDE9FE / #6D28D9	.badge-in-transit
+	customs-pend	Customs Pending	#CFFAFE / #0E7490	.badge-customs
+	customs-clear	Customs Cleared	#CFFAFE / #0E7490	.badge-customs
+	customs-hold	Customs Hold	#FEF9C3 / #854D0E	.badge-on-hold
+	out-delivery	Out for Delivery	#FEF9C3 / #854D0E	.badge-out-delivery
+	delivered	Delivered	#DCFCE7 / #15803D	.badge-delivered
+	failed	Failed Delivery	#FEE2E2 / #991B1B	.badge-failed
+	cancelled	Cancelled	#FEE2E2 / #991B1B	.badge-cancelled
+	on-hold	On Hold	#F3F4F6 / #374151	.badge-on-hold
+	returned	Returned to Sender	#F3F4F6 / #374151	.badge-on-hold
+
+5.2 Badge Anatomy
+•	Container: display inline-flex, align-items center, gap: 5px, font-size: 11px, font-weight: 600
+•	Leading dot: 5x5px filled circle, background: currentColor (inherits text color)
+•	Text: uppercase NOT used — sentence case label
+•	Padding: 3px 9px horizontal, border-radius: 20px (fully rounded)
+•	Never use border on badges — background color provides sufficient differentiation
+<!-- Example badge HTML pattern -->
+<span class="badge badge-delivered">
+  <!-- dot via CSS ::before pseudo-element -->
+  Delivered
+</span>
+
+ 
+6. Icon Library — Lucide React Usage Guide
+6.1 Icon Sizing Standards
+Context	Size	Stroke Width	Color
+Nav sidebar items	15px	1.5px	Inherits nav item color (rgba white or accent)
+KPI card icons	17px	1.5px	Inherits icon wrap color class
+Table row action icons	14px	1.5px	--muted-text, hover: --terra
+Button icons (leading)	14px	1.5px	Inherits button text color
+Topbar icons	17px	1.5px	--muted-text
+Status indicators	13px	1.5px	Semantic color (green, red, amber)
+Empty state icons	40px	1px	--border-warm, centered
+Toast / alert icons	16px	1.5px	Semantic color
+Modal close icon	18px	1.5px	--muted-text, hover: --ink
+Driver app large actions	24px	1.5px	White on colored background
+
+6.2 Icon Usage by Context
+Icon (Lucide Name)	Used In	Portal
+Package	Shipments nav, KPI card, shipment detail header	All
+LayoutDashboard	Dashboard nav item	All
+Truck	Drivers nav, fleet management, driver assignment	Admin, Dispatch
+Globe	Dispatch nav, corridor stats, international badge	Dispatch, Admin
+Map	Driver map, geofencing, location inputs	Dispatch, Driver
+Navigation	Active job, route mode, directions CTA	Driver
+ScanLine	Barcode scanning, QR code actions	Warehouse
+Warehouse	Warehouse nav, inventory hub	Warehouse, Admin
+FileText	Customs documents, invoice download	Customs, Admin
+ShieldCheck	KYC verification, security, compliance	Admin
+DollarSign	Wallet, payments, revenue KPI	Customer, Admin
+Wallet	Wallet nav item, balance display	Customer
+TrendingUp	Analytics nav, positive trend indicator	Analytics, Admin
+TrendingDown	Negative trend indicator	Admin, Analytics
+Bell	Notifications nav and topbar icon	All
+Search	Topbar search, table filter input	All
+ChevronDown	Dropdown selects, user menu, accordion	All
+CheckCircle	Delivered status, success states, completed steps	All
+AlertTriangle	Warning alerts, customs hold, anomalies	Admin, Customs
+AlertCircle	Error states, failed delivery, system alerts	All
+Clock	Pending status, time-based metrics, ETA	All
+MapPin	Address inputs, delivery location, tracking	Customer, Dispatch
+RefreshCw	Refresh data, retry action, sync indicator	All
+Download	Export CSV, label download, invoice download	All
+Upload	Document upload, CSV import	Customs, Admin
+Eye	View details, show password toggle	All
+LogOut	Sidebar footer logout button	All
+Menu	Topbar hamburger — sidebar toggle	All
+X	Modal close, tag removal, cancel inline action	All
+ArrowRight	"View all" links, "Continue" in wizard	All
+Route	Route planning, driver routes tab	Dispatch
+Building2	Agent/branch nav and cards	Agent, Admin
+
+ 
+7. Portal Screen Layout Specifications
+This section defines the exact layout structure for every major screen across all 8 portals. Layout descriptions follow a consistent format: shell structure, content zones, component usage, and interaction notes.
+
+7.1 Admin Portal
+Admin Dashboard — /admin
+Zone	Layout	Components	Data Source
+Live status bar	Full width, 48px, bg: --ink	Live dot + text stats inline	WebSocket / polling every 30s
+KPI row 1	4-col grid, gap 16px	4x KpiCard: Revenue, Shipments, On-time rate, Avg delivery time	store.kpis
+KPI row 2	4-col grid, gap 16px	4x KpiCard: Customers, Active drivers, Customs holds, Corridors	store.kpis
+Charts row	2-col: 1fr 340px	LineChart (revenue+volume 7d) | PieChart (corridors)	store.analytics
+Bottom row	2-col: 1fr 300px	DataTable (recent shipments) | Activity feed list	store.shipments
+Empty state	Centered in each zone	Package icon, "No data yet" message	—
+
+Admin Shipments — /admin/shipments
+Zone	Layout	Components
+Filter bar	Full width flex row, gap: 12px, mb: 16px	Status dropdown, Corridor dropdown, Date range picker, Search input, Export CSV btn
+Stats strip	Inline count badges below filter bar	6 status counts: Pending · In Transit · Customs · Delivered · Failed · Cancelled
+Main table	Full width DataTable in card	Cols: Tracking ID, Customer, Route, Courier, Status, Amount, Updated, Actions
+Row expand	Click row → drawer from right 400px	Full shipment detail without page navigation
+Bulk actions	Appear when rows selected (checkbox col)	"Update status" dropdown, "Export selected" button
+
+Admin User Management — /admin/users
+Zone	Layout	Components
+Filter bar	Flex row	Role filter, Country filter, KYC status filter, Active/Inactive toggle, Search
+User table	DataTable	Cols: Avatar+Name, Email, Country, Role badge, Shipments, Balance, KYC badge, Joined, Actions
+User detail	Right drawer 480px on row click	Profile, shipment history (mini table), wallet transactions (mini table), KYC docs viewer
+KYC review	In detail drawer	Doc preview (image), Approve/Reject buttons with reason input, status timeline
+
+7.2 Customer Portal
+Customer Dashboard — /customer
+Zone	Layout	Components
+Greeting	Full width, mb: 24px	Playfair 700 22px "Good morning, Adaeze" + date. Quick action buttons row.
+KPI row	4-col grid	4x KpiCard: Active shipments, Total shipped, Wallet balance (with currency), Success rate
+Recent shipments	2-col: 1fr 320px	ShipmentCard list (5 most recent) | Wallet card widget
+Track input	Full width card	Large search input "Enter tracking number", Track btn (terra)
+Promo banner	Full width, optional	Admin-controlled announcement. Dismissible. --gold-pale bg.
+
+New Shipment Wizard — /customer/ship
+Step	Screen Content	Validation
+Step 1: Type	Icon grid: Parcel · Document · Fragile · Cargo · Cold Chain. Select one.	Must select type
+Step 2: Package	Weight input, Dimensions (L×W×H), Description textarea, Declared value, Insurance toggle + cost preview	Weight required, description required
+Step 3: Pickup	Saved address selector OR new address form with Google Maps autocomplete. Pickup date picker.	Address required, date required
+Step 4: Delivery	Same as Step 3. "Same as pickup" toggle available.	Address required
+Step 5: Service	Courier rate cards: logo, name, price, days, AI recommended badge. Confidence score bar.	Must select service
+Step 6: Review	Full summary: addresses, package, service, cost breakdown. Payment: wallet or card. Confirm button.	Wallet balance check
+
+Shipment Detail — /customer/shipments/[id]
+•	Header: Tracking number (font-mono, large), Status badge (large version), Courier logo + service name, Dates row
+•	Info grid: 2-col — Pickup address card + Delivery address card
+•	Package details: Type, Weight, Dimensions, Description, Declared value — in definition list style
+•	Cost breakdown: Itemized — Base, Fuel, Customs, Insurance, Total. Divider above Total.
+•	Documents: Uploaded customs docs list with AI extraction status badges. Upload button.
+•	Live driver map: Google Maps embed, driver marker, route polyline. Only shown when out-for-delivery.
+•	Tracking timeline: TrackingTimeline component, full height. All events from booking to now.
+•	Actions: Download label, Download invoice, Cancel (if pending_pickup), Contact support
+
+7.3 Driver Portal
+Driver Dashboard — /driver
+Zone	Layout	Components
+Status toggle	Full width card, centered, 120px height	Large Online/Offline toggle pill. Status: Available · On Pickup · On Delivery · On Break
+Active job	Full width card, --ink bg	Job type badge, Address, Package type, Accept/Start/Deliver action button
+Earnings today	3-col mini cards	Today earnings, This week, Completion rate
+Job queue	Full width list	Pending jobs: address, distance, package type, Priority badge
+
+Active Delivery — /driver/active
+•	Full-screen map with navigation route polyline
+•	Bottom drawer: recipient name, address, delivery instructions, phone CTA
+•	Status buttons: "At Pickup" → "Collected" → "Out for Delivery" → "Delivered"
+•	POD screen (on "Delivered" tap): Photo capture, Signature pad, OTP input, Geo-stamp confirmation
+
+7.4 Dispatch Portal
+Live Dispatch Map — /dispatch
+•	Full-height Google Maps dark mode. Sidebar 240px + topbar 56px subtracted from viewport.
+•	Driver markers: 32px custom SVG pins. Green = available, Terra = on trip, Gray = offline.
+•	Unassigned shipment pins: amber dot. Click → assign job modal.
+•	Right panel (320px): Slides in on click. Driver info, current job, location, earnings, Assign button.
+•	Top-left floating controls: Country filter dropdown, Status filter chips, Refresh button.
+•	Top-right stats card: Translucent dark card. Online: N, Active trips: N, Unassigned: N.
+•	Auto-assign button: Terra, top of right panel. Calls nearest-driver algorithm.
+
+7.5 Warehouse Portal
+Receiving — /warehouse/receive
+•	Barcode/QR scanner input: large, full-width, auto-focus. Enter tracking number or scan.
+•	On scan: Shipment card appears with package info. Confirm weight input (pre-filled from booking).
+•	Bin assignment: Auto-suggest based on weight/type OR manual A-01-12 format input.
+•	Print bin label: Button triggers label printer on local network.
+•	Photo capture: Optional before confirming receipt.
+•	Confirm button: Creates tracking event "At Warehouse". Green success toast.
+
+7.6 Customs Portal
+Pending Review Queue — /customs
+Zone	Layout	Components
+Queue stats	Flex row 3 cards	Pending review count, Cleared today, On hold
+Document list	DataTable in card	Cols: Shipment ID, Customer, Route, Doc type, Uploaded, AI confidence, Action
+Doc viewer	Right panel 480px	PDF/image preview. AI extracted fields. Approve/Reject buttons. Notes input.
+AI confidence	Inline badge in table	Green ≥90%, Amber 70-89%, Red <70%
+
+7.7 Agent Portal
+Branch Overview — /agent
+•	Branch header: Branch name (Playfair 700), city, agent name. Commission rate badge.
+•	KPI row: Shipments today, Revenue this month, Customers served, Active drivers (local).
+•	Local shipments table: Same pattern as admin but filtered to this branch.
+•	Cash reconciliation widget: COD collected today, Pending payout, Request settlement button.
+
+7.8 Analytics Portal
+Overview — /analytics
+•	Period selector: Today / Week / Month / Quarter / Year / Custom range. Sticky top of content area.
+•	Revenue trend: Full-width LineChart. Revenue (terra line) vs previous period (dashed gray line).
+•	Operations row: 3 charts — Shipment by status (PieChart), Top routes (HorizontalBarChart), Delivery time distribution (AreaChart).
+•	Customer metrics: New vs returning (BarChart), Top 10 customers by value (DataTable).
+•	Export panel: Schedule PDF report, Download current view as CSV, Share dashboard link.
+
+ 
+8. Component States — Loading, Empty, Error
+8.1 Loading States
+Component	Loading Pattern	Duration
+Page initial load	Full page skeleton — sidebar loads immediately, content shows shimmer	Until first data fetch resolves
+DataTable	5 skeleton rows, each 48px. Columns shimmer at 60-80% width.	200ms minimum to prevent flash
+KPI cards	4 skeleton cards, value area: 32px shimmer bar, label: 16px shimmer	Until store.kpis resolves
+Charts	Skeleton rectangle same dimensions as chart container	Until data resolves
+Shipment detail	Skeleton layout matching the real layout structure	Until shipment fetch resolves
+Map	Gray placeholder with spinner centered. Map loads underneath.	Until Google Maps tile loads
+Buttons	Spinner replaces icon/text. Button disabled. Same size maintained.	While async action in flight
+
+Skeleton Shimmer Animation
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--border-warm) 25%,
+    var(--cream-dark) 50%,
+    var(--border-warm) 75%),
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 4px;
+}
+
+8.2 Empty States
+Every list, table, and data view must have an empty state. Pattern is consistent across all portals.
+Context	Icon	Title	Description	Action
+No shipments	Package 40px	"No shipments yet"	"Your shipments will appear here once you book your first delivery."	"Ship Now" terra button
+No drivers online	Truck 40px	"No drivers online"	"All drivers are currently offline. Check back soon."	Refresh icon button
+No notifications	Bell 40px	"All caught up"	"You have no new notifications."	None
+No search results	Search 40px	"No results found"	"Try adjusting your filters or search term."	Clear filters btn
+No documents	FileText 40px	"No documents uploaded"	"Upload customs documents for this shipment."	"Upload Document" btn
+Empty warehouse	Warehouse 40px	"Warehouse is empty"	"No items currently in storage."	None
+No transactions	DollarSign 40px	"No transactions yet"	"Your wallet transactions will appear here."	"Fund Wallet" btn
+
+8.3 Error States
+Error Type	Pattern	Recovery Action
+API fetch failed	Toast notification bottom-right. Red bg. AlertCircle icon. "Failed to load data." + Retry button.	Retry button re-triggers fetch
+Form validation	Inline red text below each invalid field. Input border turns red. Summary count in Submit button area.	Fix fields, resubmit
+Payment failed	Full-screen modal. Red header. Error message from gateway. Amount NOT deducted.	Try again or change payment method
+Network offline	Top banner full-width amber bg. "You are offline — some data may be outdated."	Auto-dismisses when connection restored
+Permission denied	Centered card on page: ShieldCheck icon, "Access Restricted", explanation, "Go to Dashboard" button.	Navigate away
+Not found (404)	Centered: Package icon, "Shipment not found", search again input.	Search or navigate home
+Session expired	Modal overlay: "Your session has expired. Please log in again." No close button.	Redirects to /login
+
+8.4 Toast Notifications
+Type	Position	Duration	Style
+Success	Bottom-right	4 seconds	bg: #DCFCE7, border-left: 3px #15803D, icon: CheckCircle green
+Error	Bottom-right	6 seconds	bg: #FEE2E2, border-left: 3px #DC2626, icon: AlertCircle red
+Warning	Bottom-right	5 seconds	bg: #FEF9C3, border-left: 3px #854D0E, icon: AlertTriangle amber
+Info	Bottom-right	4 seconds	bg: var(--cream), border-left: 3px var(--terra), icon: Info terra
+•	Toast container: position fixed, bottom: 24px, right: 24px, z-index: 9999
+•	Toast size: 320px wide, min-height: 60px, padding: 14px 16px, radius: 10px, shadow: shadow-lg
+•	Text: title in 13px 600 --ink, description in 12px 400 --muted-text
+•	Dismiss: X button top-right, always visible. Auto-dismiss after duration.
+•	Stacking: Multiple toasts stack vertically with 8px gap, newest on top
+
+ 
+9. Navigation Patterns
+9.1 Portal Sidebar Specifications
+Element	Spec
+Width	240px. Collapses to 0px on mobile (overlay mode). Icon-only mode (56px) on tablet.
+Background	var(--ink) — same across ALL portals. Portal identity via accent color only.
+Logo area	60px height. "DiasporaShip" in Playfair 700 19px warm-white + accent-colored last letters. Portal name below in 9px uppercase rgba(255,253,249,0.28).
+Section labels	10px 600 uppercase rgba(255,253,249,0.22). Padding: 14px 20px 4px.
+Nav items	40px height. Padding: 9px 12px. Margin: 1px 8px. Radius: 7px. Font: Instrument Sans 500 13.5px.
+Inactive items	color: rgba(255,253,249,0.52). Icon: same color.
+Hover items	bg: rgba(255,253,249,0.06). color: rgba(255,253,249,0.88).
+Active items	bg: rgba([accent],0.16). color: accent. font-weight: 600.
+Badge counts	10px 700 warm-white. bg: accent color. Padding: 1px 6px. Radius: 10px. Position: right of label.
+User footer	60px. Avatar 32px circle (accent bg, initials). Name 13px 600 warm-white. Email 11px rgba(255,253,249,0.32). Logout icon right.
+Separator line	1px rgba(255,253,249,0.07) above and below logo area and user footer.
+
+9.2 Topbar Specifications
+Element	Spec
+Height	56px. Position: sticky top: 0. z-index: 50.
+Background	var(--warm-white). Border-bottom: 1px var(--border-warm).
+Left: toggle	Menu icon 18px. Ghost button. Collapses/expands sidebar on click.
+Center: title	Page title: Playfair 700 16px --ink. Sub-label: Instrument Sans 400 11px --muted-text below title.
+Search	200px wide. bg: --cream, border: 1px --border-warm, radius: 7px. Search icon 13px left of input.
+Notifications	Bell icon 17px. Relative positioned. Red 7px dot top-right when unread exist.
+User pill	Avatar 24px + ChevronDown. Padding: 5px 10px. Border: 1px --border-warm. Radius: 20px. Opens user menu dropdown.
+
+9.3 Mobile Navigation (Customer + Driver Apps)
+•	Bottom tab bar: 5 tabs. Height: 64px. bg: --warm-white. Border-top: 1px --border-warm.
+•	Tab: Icon 22px centered + label 10px below. Inactive: --muted-text. Active: --terra (customer) or green (driver).
+•	Active tab: No background change — only color change. No rounded pill on active tab.
+•	Badge on tab: 14px red circle top-right of icon. White number inside.
+•	Safe area inset: padding-bottom: env(safe-area-inset-bottom) — required for iOS home indicator.
+
+ 
+10. Implementation Checklist
+10.1 Design System Setup
+•	globals.css imported in src/app/layout.tsx — confirms all CSS variables available
+•	tailwind.config.ts extended with brand tokens (terra, gold, ink, cream, font-playfair, font-instrument)
+•	Playfair Display + Instrument Sans loaded via next/font/google with correct weights and variable names
+•	shadcn/ui primitives remapped — button variant="default" uses --terra, not default blue
+•	Recharts default colors overridden to brand palette in a global recharts config file
+
+10.2 Per-Component Checks
+•	Every table has: loading skeleton, empty state, error state, and pagination
+•	Every form input has: default, focus, error, disabled states styled
+•	Every button has: default, hover, active, loading, disabled states
+•	All 18 shipment statuses have a defined badge class with correct bg/text colors
+•	KPI cards: icon wrap color class matches semantic meaning (not random)
+•	Tracking timeline: connector line between nodes, correct dot style per state
+•	Wallet card: shows correct currency based on user preferred_currency
+•	Live status indicators: use livePulse animation keyframe, not static dots
+
+10.3 Responsive Checks
+•	Sidebar collapses correctly on screen width < 1024px
+•	4-col KPI grid collapses to 2-col at sm: breakpoint, 1-col at xs:
+•	DataTable wraps in overflow-x-auto container on mobile — horizontal scroll
+•	Wizard steps hide labels on mobile, show only circle indicators
+•	Wallet card is full-width on mobile
+•	Map panel: full-screen on mobile, side panel becomes bottom drawer
+
+	This UI Design Specification is the single source of truth for all visual decisions in DiasporaShip. Any deviation from these specs must be documented and approved before implementation. When in doubt, reference the brand token (--terra, --gold, --ink) not a raw hex value.
+
+
+DiasporaShip
+UI Design Specification v1.0 — Confidential

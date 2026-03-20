@@ -1,0 +1,1137 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Instrument+Sans:wght@400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#1A1208;
+  --terra:#C4622D;
+  --terra-light:#D97B48;
+  --terra-pale:#F5EBE0;
+  --gold:#C9972B;
+  --gold-light:#E8B84B;
+  --gold-pale:#FBF3DC;
+  --cream:#FAF6EF;
+  --warm-white:#FFFDF9;
+  --brown:#5C3A1E;
+  --muted:#8C7B6B;
+  --border:#E8DDD0;
+  --dark:#0F0A04;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Instrument Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;}
+
+/* ── NAV ─────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 56px;height:68px;
+  background:rgba(250,246,239,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:21px;font-weight:700;
+  color:var(--ink);letter-spacing:-0.3px;
+}
+.logo span{color:var(--terra);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{
+  font-size:13.5px;font-weight:500;
+  color:var(--muted);text-decoration:none;
+  transition:color .2s;letter-spacing:0.01em;
+}
+.nav-links a:hover{color:var(--ink);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-nav-ghost{
+  font-size:13.5px;font-weight:500;color:var(--ink);
+  background:none;border:none;cursor:pointer;padding:8px 14px;
+  transition:color .2s;
+}
+.btn-nav-ghost:hover{color:var(--terra);}
+.btn-nav-solid{
+  font-size:13.5px;font-weight:600;color:var(--warm-white);
+  background:var(--ink);border:none;cursor:pointer;
+  padding:10px 22px;border-radius:5px;
+  transition:background .2s;letter-spacing:0.01em;
+}
+.btn-nav-solid:hover{background:var(--terra);}
+
+/* ── HERO ─────────────────────────────────── */
+.hero{
+  min-height:100vh;
+  background:var(--dark);
+  position:relative;overflow:hidden;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+/* left photo panel */
+.hero-photo{
+  position:relative;
+  background:linear-gradient(145deg,#2A1506 0%,#1A0D03 100%);
+  overflow:hidden;
+  display:flex;align-items:flex-end;
+}
+.hero-photo-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 60%,rgba(196,98,45,0.35) 0%,transparent 55%),
+    radial-gradient(ellipse at 70% 20%,rgba(201,151,43,0.2) 0%,transparent 50%);
+}
+/* simulated photo with geometric overlay */
+.photo-frame{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.photo-mosaic{
+  position:absolute;inset:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:3px;
+  opacity:0.75;
+}
+.photo-cell{border-radius:0;}
+.photo-cell:nth-child(1){background:linear-gradient(135deg,#3D1F0A,#6B3520);}
+.photo-cell:nth-child(2){background:linear-gradient(135deg,#5C2E12,#2A1506);}
+.photo-cell:nth-child(3){background:linear-gradient(135deg,#4A2510,#7A3E1A);}
+.photo-cell:nth-child(4){background:linear-gradient(135deg,#3A1A07,#5A2E10);}
+
+/* large decorative text on photo */
+.photo-word{
+  position:absolute;
+  font-family:'Playfair Display',serif;
+  font-size:clamp(80px,12vw,160px);
+  font-weight:900;
+  font-style:italic;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(201,151,43,0.35);
+  line-height:0.85;
+  left:32px;bottom:80px;
+  letter-spacing:-4px;
+  user-select:none;
+  pointer-events:none;
+}
+/* floating pill */
+.hero-pill{
+  position:absolute;
+  top:120px;left:32px;
+  background:rgba(201,151,43,0.15);
+  border:1px solid rgba(201,151,43,0.3);
+  border-radius:100px;
+  padding:8px 16px;
+  display:flex;align-items:center;gap:8px;
+  backdrop-filter:blur(10px);
+}
+.pill-dot{width:6px;height:6px;background:var(--gold-light);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.pill-text{font-size:12px;font-weight:500;color:var(--gold-light);letter-spacing:0.05em;}
+
+/* shipment card */
+.shipment-card{
+  position:absolute;
+  bottom:48px;left:32px;right:32px;
+  background:rgba(255,253,249,0.06);
+  border:1px solid rgba(255,253,249,0.12);
+  border-radius:14px;
+  padding:20px 22px;
+  backdrop-filter:blur(20px);
+}
+.sc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.sc-label{font-size:11px;font-weight:500;color:rgba(255,253,249,0.4);letter-spacing:0.08em;text-transform:uppercase;}
+.sc-value{font-size:13px;font-weight:600;color:rgba(255,253,249,0.9);}
+.sc-status{
+  font-size:11px;font-weight:600;
+  color:var(--gold-light);
+  background:rgba(201,151,43,0.15);
+  padding:3px 10px;border-radius:20px;
+  border:1px solid rgba(201,151,43,0.25);
+}
+.progress-track{
+  height:3px;background:rgba(255,255,255,0.1);
+  border-radius:10px;margin-bottom:10px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;width:62%;
+  background:linear-gradient(90deg,var(--gold),var(--terra-light));
+  border-radius:10px;
+}
+.sc-stops{display:flex;justify-content:space-between;}
+.sc-stop{font-size:11px;color:rgba(255,253,249,0.4);}
+.sc-stop.active{color:var(--gold-light);font-weight:600;}
+
+/* right text panel */
+.hero-text{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 56px 80px 64px;
+  background:var(--cream);
+  position:relative;
+}
+.hero-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--terra);
+  margin-bottom:28px;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-eyebrow::before{
+  content:'';display:block;
+  width:28px;height:1.5px;background:var(--terra);
+}
+.hero-h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,4.5vw,62px);
+  font-weight:900;
+  line-height:1.04;
+  letter-spacing:-2px;
+  color:var(--ink);
+  margin-bottom:28px;
+}
+.hero-h1 em{
+  font-style:italic;
+  color:var(--terra);
+}
+.hero-h1 .accent-line{
+  position:relative;display:inline-block;
+}
+.hero-sub{
+  font-size:16px;font-weight:400;
+  line-height:1.75;color:var(--muted);
+  max-width:420px;margin-bottom:44px;
+}
+.hero-ctas{display:flex;gap:12px;margin-bottom:52px;}
+.btn-terra{
+  font-size:14px;font-weight:600;
+  color:var(--warm-white);
+  background:var(--terra);
+  border:none;cursor:pointer;
+  padding:14px 28px;border-radius:6px;
+  transition:background .2s,transform .15s;
+  letter-spacing:0.01em;
+}
+.btn-terra:hover{background:var(--terra-light);transform:translateY(-1px);}
+.btn-outline-ink{
+  font-size:14px;font-weight:500;
+  color:var(--ink);background:transparent;
+  border:1.5px solid var(--border);
+  cursor:pointer;padding:13px 24px;border-radius:6px;
+  transition:border-color .2s;
+}
+.btn-outline-ink:hover{border-color:var(--ink);}
+.hero-metrics{
+  display:flex;gap:40px;
+  padding-top:40px;
+  border-top:1px solid var(--border);
+}
+.metric{display:flex;flex-direction:column;gap:4px;}
+.metric-num{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:700;color:var(--ink);
+}
+.metric-label{font-size:12px;color:var(--muted);}
+
+/* ── MARQUEE BAND ─────────────────────────── */
+.band{
+  background:var(--terra);
+  padding:14px 0;overflow:hidden;
+}
+.band-track{
+  display:flex;gap:0;
+  animation:marquee 20s linear infinite;
+  white-space:nowrap;
+}
+@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.band-item{
+  display:inline-flex;align-items:center;gap:14px;
+  padding:0 40px;
+  font-size:13px;font-weight:600;
+  color:rgba(255,253,249,0.9);
+  letter-spacing:0.04em;text-transform:uppercase;
+}
+.band-sep{color:rgba(255,253,249,0.35);font-size:16px;}
+
+/* ── TRUST BAR ────────────────────────────── */
+.trust-bar{
+  background:var(--warm-white);
+  padding:28px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.trust-label{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;margin-right:40px;}
+.trust-logos{display:flex;align-items:center;gap:40px;flex:1;}
+.trust-logo{
+  font-family:'Playfair Display',serif;
+  font-size:14px;font-weight:700;
+  color:var(--border);
+  letter-spacing:-0.5px;
+  transition:color .2s;
+}
+.trust-logo:hover{color:var(--muted);}
+
+/* ── SECTION BASE ─────────────────────────── */
+.section{padding:100px 56px;}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--terra);
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:'';display:block;width:24px;height:1.5px;background:var(--terra);}
+.big-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,3.8vw,52px);
+  font-weight:700;letter-spacing:-1.5px;
+  line-height:1.08;color:var(--ink);
+}
+.big-title em{font-style:italic;color:var(--terra);}
+.body-text{font-size:16px;font-weight:400;line-height:1.75;color:var(--muted);}
+
+/* ── HOW IT WORKS ─────────────────────────── */
+.how-section{background:var(--warm-white);}
+.how-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:64px;}
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{
+  display:flex;gap:24px;
+  padding:28px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:padding-left .2s;
+  position:relative;
+}
+.step:first-child{padding-top:0;}
+.step:last-child{border-bottom:none;}
+.step:hover{padding-left:8px;}
+.step-num{
+  font-family:'Playfair Display',serif;
+  font-size:38px;font-weight:700;
+  color:var(--border);line-height:1;
+  flex-shrink:0;width:44px;
+  transition:color .2s;
+}
+.step:hover .step-num{color:var(--terra);}
+.step-body{}
+.step-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.65;}
+/* visual panel */
+.how-visual{
+  background:var(--dark);
+  border-radius:20px;
+  padding:40px;
+  position:relative;overflow:hidden;
+  min-height:480px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.how-visual::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 40%,rgba(196,98,45,0.3) 0%,transparent 60%);
+}
+.how-map-dots{
+  position:absolute;top:40px;left:40px;right:40px;
+  height:200px;
+  display:flex;align-items:center;justify-content:center;
+}
+/* route line SVG-style with CSS */
+.route-svg{width:100%;position:relative;height:60px;}
+.route-node{
+  position:absolute;
+  width:10px;height:10px;border-radius:50%;
+  top:50%;transform:translateY(-50%);
+}
+.route-node.origin{background:var(--gold);left:0;box-shadow:0 0 0 6px rgba(201,151,43,0.2);}
+.route-node.mid1{background:var(--terra);left:33%;box-shadow:0 0 0 6px rgba(196,98,45,0.2);}
+.route-node.mid2{background:var(--terra);left:66%;box-shadow:0 0 0 6px rgba(196,98,45,0.2);}
+.route-node.dest{background:var(--gold-light);right:0;box-shadow:0 0 0 6px rgba(232,184,75,0.2);}
+.route-line-css{
+  position:absolute;top:50%;left:0;right:0;height:1px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,0.3) 0px,rgba(255,255,255,0.3) 6px,transparent 6px,transparent 14px);
+  transform:translateY(-50%);
+}
+.how-flag-row{position:absolute;top:44px;left:40px;right:40px;display:flex;justify-content:space-between;align-items:center;}
+.how-flag{text-align:center;}
+.how-flag-icon{font-size:28px;margin-bottom:4px;}
+.how-flag-city{font-size:11px;font-weight:500;color:rgba(255,253,249,0.5);}
+.how-arrow{font-size:20px;color:var(--gold);animation:slide 2s ease-in-out infinite;}
+@keyframes slide{0%,100%{transform:translateX(0);}50%{transform:translateX(6px);}}
+/* card at bottom of how visual */
+.how-card{
+  background:rgba(255,253,249,0.07);
+  border:1px solid rgba(255,253,249,0.12);
+  border-radius:12px;padding:20px;
+  position:relative;
+}
+.how-card-label{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,253,249,0.4);margin-bottom:12px;}
+.how-card-track{display:flex;flex-direction:column;gap:10px;}
+.hct-row{display:flex;align-items:center;gap:12px;}
+.hct-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.hct-text{font-size:13px;color:rgba(255,253,249,0.7);}
+.hct-time{font-size:11px;color:rgba(255,253,249,0.3);margin-left:auto;}
+.hct-dot.done{background:var(--gold);}
+.hct-dot.now{background:var(--terra-light);animation:blink 1.5s infinite;}
+.hct-dot.next{background:rgba(255,255,255,0.15);}
+
+/* ── FEATURES DARK ────────────────────────── */
+.feat-section{
+  background:var(--ink);
+  padding:100px 56px;
+}
+.feat-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;}
+.feat-top .big-title{color:var(--warm-white);}
+.feat-top .big-title em{color:var(--gold-light);}
+.feat-intro{font-size:15px;color:rgba(255,253,249,0.45);line-height:1.7;max-width:320px;}
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:rgba(255,253,249,0.06);
+  border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,253,249,0.06);
+}
+.feat-card{
+  padding:36px 32px;
+  background:var(--ink);
+  transition:background .25s;
+  cursor:default;
+}
+.feat-card:hover{background:#1F1409;}
+.feat-card-icon{
+  font-size:22px;margin-bottom:22px;
+  width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;
+}
+.feat-card-icon.terra{background:rgba(196,98,45,0.15);}
+.feat-card-icon.gold{background:rgba(201,151,43,0.15);}
+.feat-card-icon.warm{background:rgba(255,253,249,0.06);}
+.feat-card-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;
+  color:var(--warm-white);margin-bottom:10px;
+}
+.feat-card-desc{font-size:13.5px;color:rgba(255,253,249,0.45);line-height:1.7;}
+
+/* ── CORRIDORS ────────────────────────────── */
+.corridor-section{background:var(--terra-pale);padding:100px 56px;}
+.corridor-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start;margin-top:64px;}
+.corridor-list{display:flex;flex-direction:column;gap:3px;}
+.corr-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;
+  background:var(--warm-white);
+  border-radius:10px;
+  cursor:pointer;
+  transition:background .2s,transform .15s;
+  border:1px solid transparent;
+}
+.corr-row:hover{background:var(--warm-white);border-color:var(--terra);transform:translateX(4px);}
+.corr-left{display:flex;align-items:center;gap:16px;}
+.corr-flags{display:flex;align-items:center;gap:4px;font-size:20px;}
+.corr-arrow-sm{font-size:12px;color:var(--terra);}
+.corr-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);}
+.corr-cities{font-size:12px;color:var(--muted);margin-top:1px;}
+.corr-right{text-align:right;}
+.corr-days{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--terra);}
+.corr-days-label{font-size:11px;color:var(--muted);}
+
+/* right side big stat */
+.corridor-stat-box{
+  background:var(--dark);
+  border-radius:20px;padding:48px;
+  position:relative;overflow:hidden;
+}
+.corridor-stat-box::before{
+  content:'';position:absolute;
+  top:-100px;right:-100px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(196,98,45,0.3),transparent 70%);
+}
+.csb-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra-light);margin-bottom:40px;}
+.csb-num{
+  font-family:'Playfair Display',serif;
+  font-size:72px;font-weight:900;
+  color:var(--warm-white);line-height:1;
+  margin-bottom:8px;
+}
+.csb-label{font-size:16px;color:rgba(255,253,249,0.5);margin-bottom:48px;}
+.csb-divider{height:1px;background:rgba(255,253,249,0.08);margin-bottom:32px;}
+.csb-facts{display:flex;flex-direction:column;gap:16px;}
+.csb-fact{display:flex;align-items:center;gap:12px;}
+.csb-fact-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.csb-fact-text{font-size:14px;color:rgba(255,253,249,0.6);}
+
+/* ── TESTIMONIALS ─────────────────────────── */
+.testi-section{background:var(--warm-white);padding:100px 56px;}
+.testi-layout{margin-top:64px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:24px;}
+.testi-main{
+  background:var(--terra);
+  border-radius:18px;padding:40px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  min-height:360px;
+}
+.testi-main .testi-stars{color:rgba(255,253,249,0.6);font-size:13px;letter-spacing:3px;margin-bottom:20px;}
+.testi-main .testi-quote{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-style:italic;
+  font-weight:700;color:var(--warm-white);
+  line-height:1.55;margin-bottom:32px;flex:1;
+}
+.testi-main .testi-author{
+  display:flex;align-items:center;gap:14px;
+  padding-top:24px;
+  border-top:1px solid rgba(255,253,249,0.2);
+}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;flex-shrink:0;
+}
+.testi-name{font-size:14px;font-weight:600;color:var(--warm-white);}
+.testi-where{font-size:12px;color:rgba(255,253,249,0.55);margin-top:1px;}
+.testi-secondary{
+  background:var(--cream);
+  border:1px solid var(--border);
+  border-radius:18px;padding:32px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.testi-secondary .testi-stars{color:var(--gold);font-size:13px;letter-spacing:3px;margin-bottom:16px;}
+.testi-secondary .testi-quote{
+  font-size:15px;font-weight:400;color:var(--ink);line-height:1.7;flex:1;margin-bottom:24px;
+}
+.testi-secondary .testi-author{display:flex;align-items:center;gap:12px;}
+.testi-secondary .testi-name{font-size:14px;font-weight:600;color:var(--ink);}
+.testi-secondary .testi-where{font-size:12px;color:var(--muted);}
+
+/* ── PRICING TEASER ───────────────────────── */
+.price-section{background:var(--gold-pale);padding:100px 56px;}
+.price-layout{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:64px;}
+.price-card{
+  background:var(--warm-white);
+  border:1px solid var(--border);
+  border-radius:16px;padding:36px;
+  transition:transform .2s,box-shadow .2s;
+}
+.price-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(26,18,8,0.10);}
+.price-card.featured{
+  background:var(--ink);
+  border-color:var(--ink);
+}
+.price-tier{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;}
+.price-card.featured .price-tier{color:var(--gold-light);}
+.price-from{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.price-card.featured .price-from{color:rgba(255,253,249,0.4);}
+.price-num{
+  font-family:'Playfair Display',serif;
+  font-size:44px;font-weight:700;
+  color:var(--ink);line-height:1;margin-bottom:4px;
+}
+.price-card.featured .price-num{color:var(--warm-white);}
+.price-unit{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.price-card.featured .price-unit{color:rgba(255,253,249,0.4);}
+.price-divider{height:1px;background:var(--border);margin-bottom:24px;}
+.price-card.featured .price-divider{background:rgba(255,253,249,0.1);}
+.price-features{display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+.price-feat{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink);}
+.price-card.featured .price-feat{color:rgba(255,253,249,0.8);}
+.price-check{color:var(--terra);font-size:14px;}
+.price-card.featured .price-check{color:var(--gold-light);}
+.price-btn{
+  width:100%;padding:13px;border-radius:8px;
+  font-size:14px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--border);background:none;
+  color:var(--ink);transition:all .2s;
+}
+.price-btn:hover{border-color:var(--terra);color:var(--terra);}
+.price-card.featured .price-btn{
+  background:var(--terra);border-color:var(--terra);
+  color:var(--warm-white);
+}
+.price-card.featured .price-btn:hover{background:var(--terra-light);}
+
+/* ── CTA SECTION ──────────────────────────── */
+.cta-section{
+  background:var(--dark);
+  padding:100px 56px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;
+  bottom:-200px;left:-200px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(196,98,45,0.25),transparent 60%);
+}
+.cta-section::after{
+  content:'';position:absolute;
+  top:-100px;right:-100px;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(201,151,43,0.15),transparent 60%);
+}
+.cta-left{position:relative;}
+.cta-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--terra-light);margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.cta-eyebrow::before{content:'';display:block;width:24px;height:1.5px;background:var(--terra-light);}
+.cta-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,4vw,52px);
+  font-weight:900;color:var(--warm-white);
+  letter-spacing:-2px;line-height:1.05;
+  margin-bottom:20px;
+}
+.cta-title em{font-style:italic;color:var(--gold-light);}
+.cta-sub{font-size:16px;color:rgba(255,253,249,0.45);line-height:1.7;margin-bottom:40px;max-width:420px;}
+.cta-actions{display:flex;gap:12px;}
+.btn-cta-gold{
+  font-size:14px;font-weight:600;
+  color:var(--ink);background:var(--gold-light);
+  border:none;cursor:pointer;
+  padding:15px 30px;border-radius:6px;
+  transition:background .2s,transform .15s;
+}
+.btn-cta-gold:hover{background:var(--gold);transform:translateY(-1px);}
+.btn-cta-ghost{
+  font-size:14px;font-weight:500;
+  color:rgba(255,253,249,0.6);background:none;
+  border:1.5px solid rgba(255,253,249,0.15);cursor:pointer;
+  padding:14px 26px;border-radius:6px;
+  transition:border-color .2s,color .2s;
+}
+.btn-cta-ghost:hover{border-color:rgba(255,253,249,0.4);color:var(--warm-white);}
+/* right side quote calc */
+.quote-widget{
+  background:rgba(255,253,249,0.05);
+  border:1px solid rgba(255,253,249,0.1);
+  border-radius:18px;padding:36px;
+  position:relative;
+}
+.qw-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--warm-white);margin-bottom:24px;}
+.qw-field{margin-bottom:16px;}
+.qw-label{font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,253,249,0.4);margin-bottom:6px;}
+.qw-input{
+  width:100%;background:rgba(255,253,249,0.07);
+  border:1px solid rgba(255,253,249,0.12);
+  border-radius:8px;padding:11px 14px;
+  font-size:14px;color:var(--warm-white);
+  font-family:'Instrument Sans',sans-serif;
+  outline:none;transition:border-color .2s;
+  appearance:none;
+}
+.qw-input:focus{border-color:rgba(201,151,43,0.5);}
+.qw-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.qw-btn{
+  width:100%;padding:14px;margin-top:8px;
+  background:var(--terra);border:none;
+  border-radius:8px;font-size:14px;font-weight:600;
+  color:var(--warm-white);cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;
+  transition:background .2s;
+}
+.qw-btn:hover{background:var(--terra-light);}
+
+/* ── FOOTER ───────────────────────────────── */
+footer{
+  background:var(--ink);
+  border-top:1px solid rgba(255,253,249,0.06);
+  padding:64px 56px 36px;
+}
+.footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px;}
+.footer-logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;color:var(--warm-white);
+  margin-bottom:14px;
+}
+.footer-logo span{color:var(--terra);}
+.footer-desc{font-size:13px;color:rgba(255,253,249,0.35);line-height:1.8;max-width:240px;margin-bottom:24px;}
+.social-row{display:flex;gap:10px;}
+.social-btn{
+  width:34px;height:34px;border-radius:8px;
+  background:rgba(255,253,249,0.06);
+  border:1px solid rgba(255,253,249,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;cursor:pointer;
+  transition:background .2s;color:rgba(255,253,249,0.5);
+  text-decoration:none;
+}
+.social-btn:hover{background:rgba(255,253,249,0.12);}
+.footer-col-title{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,253,249,0.3);margin-bottom:20px;}
+.footer-col-links{list-style:none;display:flex;flex-direction:column;gap:11px;}
+.footer-col-links a{font-size:14px;color:rgba(255,253,249,0.5);text-decoration:none;transition:color .2s;}
+.footer-col-links a:hover{color:var(--warm-white);}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:28px;border-top:1px solid rgba(255,253,249,0.06);
+}
+.footer-copy{font-size:12px;color:rgba(255,253,249,0.25);}
+.footer-badges{display:flex;gap:6px;}
+.footer-badge{
+  font-size:11px;font-weight:500;
+  color:rgba(255,253,249,0.3);
+  background:rgba(255,253,249,0.05);
+  border:1px solid rgba(255,253,249,0.08);
+  padding:4px 10px;border-radius:4px;
+}
+
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Diaspora<span>Ship</span></div>
+  <ul class="nav-links">
+    <li><a href="#">How it works</a></li>
+    <li><a href="#">Corridors</a></li>
+    <li><a href="#">Business</a></li>
+    <li><a href="#">Track</a></li>
+    <li><a href="#">Pricing</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-nav-ghost">Sign in</button>
+    <button class="btn-nav-solid">Get a Quote</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <!-- left: photo / dark panel -->
+  <div class="hero-photo">
+    <div class="hero-photo-bg"></div>
+    <div class="photo-mosaic">
+      <div class="photo-cell"></div>
+      <div class="photo-cell"></div>
+      <div class="photo-cell"></div>
+      <div class="photo-cell"></div>
+    </div>
+    <div class="hero-pill">
+      <span class="pill-dot"></span>
+      <span class="pill-text">Live tracking active · 3,200 shipments today</span>
+    </div>
+    <div class="photo-word">Home.</div>
+    <div class="shipment-card">
+      <div class="sc-row">
+        <span class="sc-label">DS-20240318-KW91</span>
+        <span class="sc-status">In Flight ✈</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="sc-stops">
+        <span class="sc-stop">Atlanta</span>
+        <span class="sc-stop active">→ JFK → Lagos →</span>
+        <span class="sc-stop">Delivered</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- right: text -->
+  <div class="hero-text">
+    <div class="hero-eyebrow">US · UK · Canada to Africa</div>
+    <h1 class="hero-h1">
+      Every package<br>
+      carries a piece<br>
+      of <em>home.</em>
+    </h1>
+    <p class="hero-sub">DiasporaShip is the premium logistics platform built for the African diaspora. Door-to-door shipping from the US to Nigeria, Ghana and Kenya — tracked live, delivered with care.</p>
+    <div class="hero-ctas">
+      <button class="btn-terra">Get a Free Quote</button>
+      <button class="btn-outline-ink">Track a Shipment</button>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric">
+        <span class="metric-num">98.2%</span>
+        <span class="metric-label">On-time delivery</span>
+      </div>
+      <div class="metric">
+        <span class="metric-num">12K+</span>
+        <span class="metric-label">Families served</span>
+      </div>
+      <div class="metric">
+        <span class="metric-num">3 days</span>
+        <span class="metric-label">US → Lagos express</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE BAND -->
+<div class="band">
+  <div class="band-track">
+    <span class="band-item">🇺🇸 US <span class="band-sep">→</span> 🇳🇬 Nigeria</span>
+    <span class="band-item">🇺🇸 US <span class="band-sep">→</span> 🇬🇭 Ghana</span>
+    <span class="band-item">🇺🇸 US <span class="band-sep">→</span> 🇰🇪 Kenya</span>
+    <span class="band-item">🇬🇧 UK <span class="band-sep">→</span> 🇳🇬 Nigeria</span>
+    <span class="band-item">🇨🇦 Canada <span class="band-sep">→</span> 🇬🇭 Ghana</span>
+    <span class="band-item">Door-to-door delivery</span>
+    <span class="band-item">Live GPS tracking</span>
+    <span class="band-item">Customs handled</span>
+    <span class="band-item">🇺🇸 US <span class="band-sep">→</span> 🇳🇬 Nigeria</span>
+    <span class="band-item">🇺🇸 US <span class="band-sep">→</span> 🇬🇭 Ghana</span>
+    <span class="band-item">🇺🇸 US <span class="band-sep">→</span> 🇰🇪 Kenya</span>
+    <span class="band-item">🇬🇧 UK <span class="band-sep">→</span> 🇳🇬 Nigeria</span>
+    <span class="band-item">🇨🇦 Canada <span class="band-sep">→</span> 🇬🇭 Ghana</span>
+    <span class="band-item">Door-to-door delivery</span>
+    <span class="band-item">Live GPS tracking</span>
+    <span class="band-item">Customs handled</span>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <span class="trust-label">Trusted by businesses across</span>
+  <div class="trust-logos">
+    <span class="trust-logo">Zenith Bank</span>
+    <span class="trust-logo">Access Bank</span>
+    <span class="trust-logo">MTN Group</span>
+    <span class="trust-logo">Jumia</span>
+    <span class="trust-logo">Flutterwave</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section how-section reveal">
+  <div class="eyebrow">Simple Process</div>
+  <div class="big-title">Ship home in<br><em>four steps.</em></div>
+  <div class="how-layout">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Get your instant quote</div>
+          <div class="step-desc">Enter package details and destination. Our AI calculates the best rate in seconds — weight, route, customs, all included. No surprises.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Book and pay securely</div>
+          <div class="step-desc">Choose your service — standard, express, or freight. Pay with card, bank transfer, or your DiasporaShip wallet in USD, NGN, or GHS.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">We come to your door</div>
+          <div class="step-desc">Our driver collects from your address. We handle customs documents, export clearance, and all the paperwork you'd otherwise spend hours on.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">Track every step live</div>
+          <div class="step-desc">Follow your package on a live map from pickup to your recipient's door. They get SMS updates. You get peace of mind.</div>
+        </div>
+      </div>
+    </div>
+    <div class="how-visual">
+      <div class="how-flag-row">
+        <div class="how-flag">
+          <div class="how-flag-icon">🇺🇸</div>
+          <div class="how-flag-city">Atlanta</div>
+        </div>
+        <div class="how-arrow">——→</div>
+        <div class="how-flag">
+          <div class="how-flag-icon">✈️</div>
+          <div class="how-flag-city">In flight</div>
+        </div>
+        <div class="how-arrow">——→</div>
+        <div class="how-flag">
+          <div class="how-flag-icon">🇳🇬</div>
+          <div class="how-flag-city">Lagos</div>
+        </div>
+      </div>
+      <div class="how-card">
+        <div class="how-card-label">Live tracking — DS-20240318-AK72</div>
+        <div class="how-card-track">
+          <div class="hct-row"><div class="hct-dot done"></div><span class="hct-text">Package collected · Atlanta Hub</span><span class="hct-time">Mar 15</span></div>
+          <div class="hct-row"><div class="hct-dot done"></div><span class="hct-text">Export cleared · JFK New York</span><span class="hct-time">Mar 16</span></div>
+          <div class="hct-row"><div class="hct-dot now"></div><span class="hct-text" style="color:var(--terra-light);font-weight:500">In flight — arrives Lagos tomorrow</span><span class="hct-time" style="color:var(--terra-light)">Now</span></div>
+          <div class="hct-row"><div class="hct-dot next"></div><span class="hct-text">Out for delivery · Lagos</span><span class="hct-time">Mar 18</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="feat-section reveal">
+  <div class="feat-top">
+    <div>
+      <div class="eyebrow" style="color:var(--terra-light)"><span style="background:var(--terra-light);display:inline-block;width:24px;height:1.5px;margin-right:12px;vertical-align:middle"></span>Why DiasporaShip</div>
+      <div class="big-title" style="color:var(--warm-white)">Built for <em>us.</em><br>By people who<br>understand.</div>
+    </div>
+    <p class="feat-intro">Every feature was designed around the real experience of the African diaspora — not a generic courier platform that treats Africa as an afterthought.</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-icon terra">🤖</div>
+      <div class="feat-card-title">AI pricing engine</div>
+      <div class="feat-card-desc">Instant, accurate rates calculated from weight, route, customs complexity, fuel surcharges, and seasonal demand. No phone calls. No waiting.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon gold">📍</div>
+      <div class="feat-card-title">Live GPS tracking</div>
+      <div class="feat-card-desc">Watch your driver move on a live map. Know the moment it's collected, when it clears customs, and when the driver is 10 minutes from the door.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon warm">📋</div>
+      <div class="feat-card-title">Customs, done for you</div>
+      <div class="feat-card-desc">We generate commercial invoices, packing lists, airway bills, and submit export and import declarations. You do nothing.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon gold">🏠</div>
+      <div class="feat-card-title">True door-to-door</div>
+      <div class="feat-card-desc">Pickup from your home or office in the US. Delivered to any residential address in Nigeria, Ghana, or Kenya. Not a depot. Not an agent office.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon terra">💳</div>
+      <div class="feat-card-title">Multi-currency wallet</div>
+      <div class="feat-card-desc">Fund in USD, NGN, GHS, or KES. Pay for shipments, receive COD collections, and manage your entire logistics budget from one account.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon warm">🏢</div>
+      <div class="feat-card-title">Business accounts</div>
+      <div class="feat-card-desc">Corporate credit, monthly invoicing, bulk booking, warehouse-to-door fulfillment, and a dedicated account manager for high-volume shippers.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CORRIDORS -->
+<section class="corridor-section reveal">
+  <div class="eyebrow">Active Routes</div>
+  <div class="big-title">Where we deliver.</div>
+  <div class="corridor-layout">
+    <div class="corridor-list">
+      <div class="corr-row">
+        <div class="corr-left">
+          <div class="corr-flags">🇺🇸 <span class="corr-arrow-sm">→</span> 🇳🇬</div>
+          <div><div class="corr-name">US → Nigeria</div><div class="corr-cities">Atlanta · Houston · New York · DC · Dallas</div></div>
+        </div>
+        <div class="corr-right"><div class="corr-days">3–7 days</div><div class="corr-days-label">Express</div></div>
+      </div>
+      <div class="corr-row">
+        <div class="corr-left">
+          <div class="corr-flags">🇺🇸 <span class="corr-arrow-sm">→</span> 🇬🇭</div>
+          <div><div class="corr-name">US → Ghana</div><div class="corr-cities">All major US cities · Accra · Kumasi</div></div>
+        </div>
+        <div class="corr-right"><div class="corr-days">4–8 days</div><div class="corr-days-label">Express</div></div>
+      </div>
+      <div class="corr-row">
+        <div class="corr-left">
+          <div class="corr-flags">🇺🇸 <span class="corr-arrow-sm">→</span> 🇰🇪</div>
+          <div><div class="corr-name">US → Kenya</div><div class="corr-cities">Nairobi · Mombasa · Kisumu</div></div>
+        </div>
+        <div class="corr-right"><div class="corr-days">5–9 days</div><div class="corr-days-label">Express</div></div>
+      </div>
+      <div class="corr-row">
+        <div class="corr-left">
+          <div class="corr-flags">🇬🇧 <span class="corr-arrow-sm">→</span> 🇳🇬</div>
+          <div><div class="corr-name">UK → Nigeria</div><div class="corr-cities">London · Manchester · Birmingham</div></div>
+        </div>
+        <div class="corr-right"><div class="corr-days">2–5 days</div><div class="corr-days-label">Express</div></div>
+      </div>
+      <div class="corr-row" style="opacity:0.5;pointer-events:none">
+        <div class="corr-left">
+          <div class="corr-flags">🇨🇦 <span class="corr-arrow-sm">→</span> 🌍</div>
+          <div><div class="corr-name">Canada → Africa</div><div class="corr-cities">Coming Q3 2025</div></div>
+        </div>
+        <div class="corr-right"><div class="corr-days" style="color:var(--muted)">Soon</div></div>
+      </div>
+    </div>
+    <div class="corridor-stat-box">
+      <div class="csb-eyebrow">Our network</div>
+      <div class="csb-num">40+</div>
+      <div class="csb-label">Countries in delivery network</div>
+      <div class="csb-divider"></div>
+      <div class="csb-facts">
+        <div class="csb-fact"><div class="csb-fact-dot"></div><div class="csb-fact-text">Pickup from your home or office</div></div>
+        <div class="csb-fact"><div class="csb-fact-dot"></div><div class="csb-fact-text">Delivery to residential addresses</div></div>
+        <div class="csb-fact"><div class="csb-fact-dot"></div><div class="csb-fact-text">Full customs clearance included</div></div>
+        <div class="csb-fact"><div class="csb-fact-dot"></div><div class="csb-fact-text">SMS updates to your recipient</div></div>
+        <div class="csb-fact"><div class="csb-fact-dot"></div><div class="csb-fact-text">Photo proof of delivery every time</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section reveal">
+  <div class="eyebrow">Real Customers</div>
+  <div class="big-title">The diaspora<br><em>trusts us.</em></div>
+  <div class="testi-layout">
+    <div class="testi-main">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"I send food, clothes, and medicine home to my mother in Lagos every two months. DiasporaShip picks up from my apartment in Atlanta. She calls me when the driver arrives. It feels like I'm there."</div>
+      <div class="testi-author">
+        <div class="avatar" style="background:rgba(255,253,249,0.2);color:var(--warm-white);">AO</div>
+        <div><div class="testi-name">Adaeze Okonkwo</div><div class="testi-where">Atlanta, GA → Lagos, Nigeria</div></div>
+      </div>
+    </div>
+    <div class="testi-secondary">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"I import electronics for my shop in Accra. Their business account gives me monthly invoicing, customs docs handled, and I see everything live. No stress at all."</div>
+      <div class="testi-author">
+        <div class="avatar" style="background:var(--gold-pale);color:var(--brown);">FK</div>
+        <div><div class="testi-name">Fiifi Korsah</div><div class="testi-where">Houston, TX → Accra, Ghana</div></div>
+      </div>
+    </div>
+    <div class="testi-secondary">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"The tracking is incredible. I watched it go from my house in DC to JFK, on the flight, through Lagos customs, and to my sister's door in Enugu. I've never had this with any other courier."</div>
+      <div class="testi-author">
+        <div class="avatar" style="background:var(--terra-pale);color:var(--terra);">NC</div>
+        <div><div class="testi-name">Ngozi Chibuike</div><div class="testi-where">Washington DC → Enugu, Nigeria</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="price-section reveal">
+  <div class="eyebrow">Transparent Pricing</div>
+  <div class="big-title">Pay for what<br><em>you need.</em></div>
+  <div class="price-layout">
+    <div class="price-card">
+      <div class="price-tier">Standard</div>
+      <div class="price-from">From</div>
+      <div class="price-num">$29</div>
+      <div class="price-unit">per shipment · US → Nigeria</div>
+      <div class="price-divider"></div>
+      <div class="price-features">
+        <div class="price-feat"><span class="price-check">✓</span> Door-to-door delivery</div>
+        <div class="price-feat"><span class="price-check">✓</span> 5–10 day delivery</div>
+        <div class="price-feat"><span class="price-check">✓</span> Live tracking</div>
+        <div class="price-feat"><span class="price-check">✓</span> SMS to recipient</div>
+        <div class="price-feat"><span class="price-check">✓</span> Photo proof of delivery</div>
+      </div>
+      <button class="price-btn">Get a Quote</button>
+    </div>
+    <div class="price-card featured">
+      <div class="price-tier">Express</div>
+      <div class="price-from">From</div>
+      <div class="price-num">$59</div>
+      <div class="price-unit">per shipment · US → Nigeria</div>
+      <div class="price-divider"></div>
+      <div class="price-features">
+        <div class="price-feat"><span class="price-check">✓</span> Door-to-door delivery</div>
+        <div class="price-feat"><span class="price-check">✓</span> 3–5 day delivery</div>
+        <div class="price-feat"><span class="price-check">✓</span> Live GPS tracking</div>
+        <div class="price-feat"><span class="price-check">✓</span> Customs handled</div>
+        <div class="price-feat"><span class="price-check">✓</span> Priority support</div>
+      </div>
+      <button class="price-btn">Get a Quote</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">Business</div>
+      <div class="price-from">Custom pricing</div>
+      <div class="price-num" style="font-size:32px;padding-top:6px;">Talk to us</div>
+      <div class="price-unit">Volume discounts available</div>
+      <div class="price-divider"></div>
+      <div class="price-features">
+        <div class="price-feat"><span class="price-check">✓</span> Dedicated account manager</div>
+        <div class="price-feat"><span class="price-check">✓</span> Monthly invoicing</div>
+        <div class="price-feat"><span class="price-check">✓</span> Bulk booking API</div>
+        <div class="price-feat"><span class="price-check">✓</span> Warehouse fulfillment</div>
+        <div class="price-feat"><span class="price-check">✓</span> Corporate credit line</div>
+      </div>
+      <button class="price-btn">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <div class="cta-left">
+    <div class="cta-eyebrow">Ready to ship?</div>
+    <div class="cta-title">Send something<br><em>home today.</em></div>
+    <p class="cta-sub">Get a free quote in 60 seconds. No account needed. Our team is available 7 days a week to help you ship anything, anywhere in Africa.</p>
+    <div class="cta-actions">
+      <button class="btn-cta-gold">Get a Free Quote</button>
+      <button class="btn-cta-ghost">WhatsApp Support</button>
+    </div>
+  </div>
+  <div class="quote-widget">
+    <div class="qw-title">Get your instant quote</div>
+    <div class="qw-row">
+      <div class="qw-field">
+        <div class="qw-label">From</div>
+        <select class="qw-input"><option>United States 🇺🇸</option><option>United Kingdom 🇬🇧</option><option>Canada 🇨🇦</option></select>
+      </div>
+      <div class="qw-field">
+        <div class="qw-label">To</div>
+        <select class="qw-input"><option>Nigeria 🇳🇬</option><option>Ghana 🇬🇭</option><option>Kenya 🇰🇪</option></select>
+      </div>
+    </div>
+    <div class="qw-row">
+      <div class="qw-field">
+        <div class="qw-label">Weight (kg)</div>
+        <input class="qw-input" type="number" placeholder="e.g. 2.5">
+      </div>
+      <div class="qw-field">
+        <div class="qw-label">Service</div>
+        <select class="qw-input"><option>Express (3–5 days)</option><option>Standard (5–10 days)</option><option>Economy</option></select>
+      </div>
+    </div>
+    <button class="qw-btn">Calculate My Rate →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Diaspora<span>Ship</span></div>
+      <p class="footer-desc">Premium door-to-door logistics connecting the African diaspora to home. US, UK, and Canada to Nigeria, Ghana, and Kenya.</p>
+      <div class="social-row">
+        <a class="social-btn" href="#">𝕏</a>
+        <a class="social-btn" href="#">in</a>
+        <a class="social-btn" href="#">f</a>
+        <a class="social-btn" href="#">📷</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Ship</div>
+      <ul class="footer-col-links">
+        <li><a href="#">Get a Quote</a></li>
+        <li><a href="#">Book a Pickup</a></li>
+        <li><a href="#">Track Shipment</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Packaging Guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-col-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Corridors</a></li>
+        <li><a href="#">For Business</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Support</div>
+      <ul class="footer-col-links">
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">WhatsApp Support</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 DiasporaShip Inc. All rights reserved.</span>
+    <div class="footer-badges">
+      <span class="footer-badge">🇺🇸 US</span>
+      <span class="footer-badge">🇬🇧 UK</span>
+      <span class="footer-badge">🇳🇬 Nigeria</span>
+      <span class="footer-badge">🇬🇭 Ghana</span>
+      <span class="footer-badge">🇰🇪 Kenya</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); } });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>

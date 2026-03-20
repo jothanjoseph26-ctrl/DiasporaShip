@@ -1,0 +1,566 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Instrument+Sans:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --terra:#C4622D;--terra-l:#D97B48;
+  --gold:#C9972B;--gold-l:#E8B84B;
+  --ink:#1A1208;--cream:#FAF6EF;--ww:#FFFDF9;
+  --muted:#8C7B6B;--bdr:#E8DDD0;
+}
+body{font-family:'Instrument Sans',sans-serif;background:var(--ink);}
+
+/* ── OUTER HERO ── */
+.hero{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:100vh;
+}
+
+/* ── PHOTO GRID PANEL ── */
+.photo-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:3px;
+  background:#0A0603;
+  position:relative;
+  overflow:hidden;
+}
+
+/* each cell */
+.cell{
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  min-height:200px;
+}
+
+/* photo backgrounds — using Unsplash source images */
+.cell-1{background:linear-gradient(135deg,#5C2E0A 0%,#8B4513 40%,#6B3010 70%,#3A1A06 100%);}
+.cell-2{background:linear-gradient(135deg,#0A1628 0%,#1A3050 40%,#0D2040 70%,#050E1C 100%);}
+.cell-3{background:linear-gradient(135deg,#3A1A06 0%,#1A0D04 40%,#0F0702 70%,#080502 100%);}
+.cell-4{background:linear-gradient(135deg,#020810 0%,#040F1C 40%,#060D18 70%,#020608 100%);}
+
+/* Unsplash images as backgrounds */
+.cell-1::before{
+  content:'';position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1566438480900-0609be27a4be?w=600&q=80');
+  background-size:cover;background-position:center;
+  transition:transform .6s ease;
+}
+.cell-2::before{
+  content:'';position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=600&q=80');
+  background-size:cover;background-position:center top;
+  transition:transform .6s ease;
+}
+.cell-3::before{
+  content:'';position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80');
+  background-size:cover;background-position:center;
+  transition:transform .6s ease;
+}
+.cell-4::before{
+  content:'';position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80');
+  background-size:cover;background-position:center;
+  transition:transform .6s ease;
+}
+
+/* zoom on hover */
+.cell:hover::before{transform:scale(1.08);}
+
+/* dark overlay on each cell */
+.cell::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(5,3,1,0.42);
+  transition:background .4s ease;
+}
+.cell:hover::after{background:rgba(5,3,1,0.18);}
+
+/* active (journey) state — glowing border */
+.cell.active::after{
+  background:rgba(5,3,1,0.15);
+  box-shadow:inset 0 0 0 2px var(--gold-l);
+}
+.cell-1.active::after{box-shadow:inset 0 0 0 2.5px var(--gold-l);}
+.cell-2.active::after{box-shadow:inset 0 0 0 2.5px var(--terra-l);}
+.cell-3.active::after{box-shadow:inset 0 0 0 2.5px var(--gold-l);}
+.cell-4.active::after{box-shadow:inset 0 0 0 2.5px #4ADE80;}
+
+/* ── CELL CONTENT ── */
+.cell-content{
+  position:absolute;inset:0;z-index:10;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:18px;
+}
+
+/* top label */
+.cell-label{
+  display:flex;align-items:center;gap:7px;
+  opacity:0;transform:translateY(-6px);
+  transition:opacity .3s ease,transform .3s ease;
+}
+.cell:hover .cell-label,
+.cell.active .cell-label{opacity:1;transform:translateY(0);}
+.label-flag{font-size:14px;}
+.label-city{
+  font-size:11px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:rgba(255,253,249,0.92);
+}
+.label-time{
+  font-size:10px;color:rgba(255,253,249,0.5);
+  margin-left:auto;
+}
+
+/* bottom info bar */
+.cell-info{
+  background:rgba(6,4,2,0.75);
+  border:1px solid rgba(255,253,249,0.1);
+  border-radius:10px;padding:12px 14px;
+  backdrop-filter:blur(16px);
+  transform:translateY(12px);opacity:0;
+  transition:opacity .35s ease,transform .35s ease;
+}
+.cell:hover .cell-info,
+.cell.active .cell-info{opacity:1;transform:translateY(0);}
+.info-status{
+  display:flex;align-items:center;gap:6px;
+  margin-bottom:6px;
+}
+.info-dot{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0;
+}
+.info-dot.gold{background:var(--gold-l);}
+.info-dot.terra{background:var(--terra-l);}
+.info-dot.blue{background:#60A5FA;}
+.info-dot.green{background:#4ADE80;animation:glow-green 1.5s infinite;}
+@keyframes glow-green{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.4);}50%{box-shadow:0 0 0 5px rgba(74,222,128,0);}}
+.info-text{font-size:12px;font-weight:600;color:rgba(255,253,249,0.88);}
+.info-sub{font-size:10.5px;color:rgba(255,253,249,0.4);line-height:1.5;}
+
+/* step indicator (which stage of journey) */
+.step-tag{
+  position:absolute;top:14px;right:14px;z-index:11;
+  font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+  padding:3px 9px;border-radius:20px;
+  opacity:0;transform:scale(0.9);
+  transition:opacity .3s,transform .3s;
+}
+.cell.active .step-tag{opacity:1;transform:scale(1);}
+.cell-1 .step-tag{background:rgba(201,151,43,0.2);color:var(--gold-l);border:1px solid rgba(201,151,43,0.3);}
+.cell-2 .step-tag{background:rgba(196,98,45,0.2);color:var(--terra-l);border:1px solid rgba(196,98,45,0.3);}
+.cell-3 .step-tag{background:rgba(96,165,250,0.2);color:#93C5FD;border:1px solid rgba(96,165,250,0.3);}
+.cell-4 .step-tag{background:rgba(74,222,128,0.15);color:#4ADE80;border:1px solid rgba(74,222,128,0.25);}
+
+/* connector lines between cells */
+.grid-connectors{
+  position:absolute;inset:0;z-index:20;pointer-events:none;
+}
+/* horizontal connector (cell 1 → cell 2) */
+.conn-h{
+  position:absolute;
+  top:25%;left:25%;
+  width:50%;height:1px;
+  background:repeating-linear-gradient(90deg,rgba(201,151,43,0) 0,rgba(201,151,43,0.7) 8px,rgba(201,151,43,0.7) 12px,rgba(201,151,43,0) 20px);
+  opacity:0;transition:opacity .5s;
+}
+/* vertical connector (cell 1 → cell 3) */
+.conn-v{
+  position:absolute;
+  top:10%;left:25%;
+  width:1px;height:80%;
+  background:repeating-linear-gradient(180deg,rgba(201,151,43,0) 0,rgba(201,151,43,0.7) 8px,rgba(201,151,43,0.7) 12px,rgba(201,151,43,0) 20px);
+  opacity:0;transition:opacity .5s;
+}
+/* diagonal connector (cell 2 → cell 4 or cell 3 → cell 4) */
+.conn-d{
+  position:absolute;
+  top:10%;right:25%;
+  width:1px;height:80%;
+  background:repeating-linear-gradient(180deg,rgba(196,98,45,0) 0,rgba(196,98,45,0.6) 8px,rgba(196,98,45,0.6) 12px,rgba(196,98,45,0) 20px);
+  opacity:0;transition:opacity .5s;
+}
+.conn-h.show,.conn-v.show,.conn-d.show{opacity:1;}
+
+/* plane icon traveling */
+.travel-plane{
+  position:absolute;z-index:25;
+  font-size:16px;pointer-events:none;
+  filter:drop-shadow(0 0 6px rgba(201,151,43,0.9));
+  opacity:0;transition:opacity .3s;
+}
+.travel-plane.show{opacity:1;}
+
+/* confetti for cell 4 */
+.confetti-wrap{
+  position:absolute;inset:0;z-index:15;
+  pointer-events:none;overflow:hidden;
+}
+.conf{
+  position:absolute;
+  width:5px;height:5px;border-radius:1px;
+  opacity:0;
+}
+.cell-4.active .conf{animation:confFall 1.2s ease forwards;}
+@keyframes confFall{
+  0%{opacity:1;transform:translateY(-20px) rotate(0deg);}
+  100%{opacity:0;transform:translateY(80px) rotate(360deg);}
+}
+
+/* progress dots at bottom of grid */
+.grid-progress{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  z-index:30;display:flex;gap:6px;
+}
+.pdot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,253,249,0.2);
+  transition:background .3s,width .3s;
+}
+.pdot.active{background:var(--gold-l);width:18px;border-radius:3px;}
+
+/* ── RIGHT TEXT PANEL ── */
+.text-panel{
+  background:var(--cream);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 52px 80px 60px;
+  position:relative;
+}
+.text-panel::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 80% 20%,rgba(196,98,45,0.06) 0%,transparent 50%),
+             radial-gradient(ellipse at 20% 80%,rgba(201,151,43,0.06) 0%,transparent 50%);
+}
+.eyebrow{
+  font-size:10.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--terra);margin-bottom:24px;
+  display:flex;align-items:center;gap:11px;position:relative;
+}
+.eyebrow::before{content:'';display:block;width:26px;height:1.5px;background:var(--terra);}
+.headline{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,3.8vw,54px);font-weight:900;
+  line-height:1.05;letter-spacing:-2px;color:var(--ink);
+  margin-bottom:22px;position:relative;
+}
+.headline em{font-style:italic;color:var(--terra);}
+.subtext{
+  font-size:15px;font-weight:400;line-height:1.8;color:var(--muted);
+  max-width:400px;margin-bottom:38px;position:relative;
+}
+.cta-row{display:flex;gap:11px;margin-bottom:48px;position:relative;}
+.btn-a{
+  font-size:13.5px;font-weight:600;color:var(--ww);background:var(--terra);
+  border:none;cursor:pointer;padding:13px 26px;border-radius:6px;
+  transition:background .2s,transform .15s;
+}
+.btn-a:hover{background:var(--terra-l);transform:translateY(-1px);}
+.btn-b{
+  font-size:13.5px;font-weight:500;color:var(--ink);background:transparent;
+  border:1.5px solid var(--bdr);cursor:pointer;padding:12px 22px;border-radius:6px;
+  transition:border-color .2s;
+}
+.btn-b:hover{border-color:var(--ink);}
+
+/* journey caption — changes with active cell */
+.journey-caption{
+  background:var(--ww);
+  border:1px solid var(--bdr);
+  border-radius:12px;padding:20px 22px;
+  margin-bottom:36px;
+  position:relative;
+  min-height:76px;
+  transition:all .3s;
+}
+.jc-step{
+  font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--terra);margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.jc-step::before{
+  content:'';display:block;
+  width:5px;height:5px;border-radius:50%;background:var(--terra);
+}
+.jc-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.jc-desc{font-size:13px;color:var(--muted);line-height:1.5;}
+
+/* 4-step journey indicator */
+.journey-steps{
+  display:flex;align-items:center;gap:0;
+  margin-bottom:36px;position:relative;
+}
+.jstep{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  flex:1;cursor:pointer;
+}
+.jstep-circle{
+  width:28px;height:28px;border-radius:50%;
+  border:1.5px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--muted);
+  background:var(--ww);
+  transition:all .3s;position:relative;z-index:2;
+}
+.jstep.done .jstep-circle{
+  background:var(--terra);border-color:var(--terra);color:var(--ww);
+}
+.jstep.active .jstep-circle{
+  background:var(--ww);border-color:var(--terra);color:var(--terra);
+  box-shadow:0 0 0 4px rgba(196,98,45,0.15);
+}
+.jstep-label{font-size:10px;color:var(--muted);text-align:center;white-space:nowrap;}
+.jstep.active .jstep-label{color:var(--terra);font-weight:600;}
+.jstep.done .jstep-label{color:var(--ink);font-weight:500;}
+.jstep-line{
+  flex:1;height:1.5px;background:var(--bdr);margin-bottom:14px;
+  transition:background .5s;
+}
+.jstep-line.done{background:var(--terra);}
+
+/* metrics */
+.metrics{
+  display:flex;gap:32px;padding-top:32px;
+  border-top:1px solid var(--bdr);position:relative;
+}
+.mnum{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);}
+.mlbl{font-size:11px;color:var(--muted);margin-top:3px;}
+</style>
+
+<div class="hero">
+
+  <!-- LEFT: INTERACTIVE 4-PHOTO GRID -->
+  <div class="photo-grid" id="photoGrid">
+
+    <!-- CELL 1: Atlanta Day — Package Collected -->
+    <div class="cell cell-1" id="cell1" onclick="setStep(0)">
+      <div class="step-tag">Step 1</div>
+      <div class="cell-content">
+        <div class="cell-label">
+          <span class="label-flag">🇺🇸</span>
+          <span class="label-city">Atlanta, US</span>
+          <span class="label-time">9:42 AM</span>
+        </div>
+        <div class="cell-info">
+          <div class="info-status">
+            <div class="info-dot gold"></div>
+            <span class="info-text">Package Collected</span>
+          </div>
+          <div class="info-sub">Driver picked up from your door · Atlanta Hub</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CELL 2: Lagos Day — Destination City -->
+    <div class="cell cell-2" id="cell2" onclick="setStep(1)">
+      <div class="step-tag">Step 2</div>
+      <div class="cell-content">
+        <div class="cell-label">
+          <span class="label-flag">✈️</span>
+          <span class="label-city">In Flight</span>
+          <span class="label-time">6h 20m</span>
+        </div>
+        <div class="cell-info">
+          <div class="info-status">
+            <div class="info-dot terra"></div>
+            <span class="info-text">Customs Cleared · In Transit</span>
+          </div>
+          <div class="info-sub">JFK → LOS · Estimated arrival tomorrow</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CELL 3: Atlanta Night — Departed Hub -->
+    <div class="cell cell-3" id="cell3" onclick="setStep(2)">
+      <div class="step-tag">Step 3</div>
+      <div class="cell-content">
+        <div class="cell-label">
+          <span class="label-flag">🇳🇬</span>
+          <span class="label-city">Lagos Hub</span>
+          <span class="label-time">8:15 AM</span>
+        </div>
+        <div class="cell-info">
+          <div class="info-status">
+            <div class="info-dot blue"></div>
+            <span class="info-text">At Lagos Warehouse</span>
+          </div>
+          <div class="info-sub">Import cleared · Out for delivery today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CELL 4: Lagos Night — Delivered -->
+    <div class="cell cell-4" id="cell4" onclick="setStep(3)">
+      <div class="step-tag">Delivered ✓</div>
+      <div class="cell-content">
+        <div class="cell-label">
+          <span class="label-flag">🏠</span>
+          <span class="label-city">Lekki, Lagos</span>
+          <span class="label-time">2:38 PM</span>
+        </div>
+        <div class="cell-info">
+          <div class="info-status">
+            <div class="info-dot green"></div>
+            <span class="info-text">Delivered — Photo Confirmed</span>
+          </div>
+          <div class="info-sub">Signed by recipient · 3 days, 4 hrs total</div>
+        </div>
+      </div>
+      <!-- confetti -->
+      <div class="confetti-wrap" id="confetti"></div>
+    </div>
+
+    <!-- progress dots -->
+    <div class="grid-progress">
+      <div class="pdot active" id="pd0"></div>
+      <div class="pdot" id="pd1"></div>
+      <div class="pdot" id="pd2"></div>
+      <div class="pdot" id="pd3"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: TEXT PANEL -->
+  <div class="text-panel">
+    <div class="eyebrow">US · UK · Canada to Africa</div>
+    <div class="headline">
+      Every package<br>carries a piece<br>of <em>home.</em>
+    </div>
+
+    <!-- journey steps indicator -->
+    <div class="journey-steps">
+      <div class="jstep active" id="js0" onclick="setStep(0)">
+        <div class="jstep-circle">1</div>
+        <div class="jstep-label">Collected</div>
+      </div>
+      <div class="jstep-line" id="jl0"></div>
+      <div class="jstep" id="js1" onclick="setStep(1)">
+        <div class="jstep-circle">2</div>
+        <div class="jstep-label">In Flight</div>
+      </div>
+      <div class="jstep-line" id="jl1"></div>
+      <div class="jstep" id="js2" onclick="setStep(2)">
+        <div class="jstep-circle">3</div>
+        <div class="jstep-label">At Hub</div>
+      </div>
+      <div class="jstep-line" id="jl2"></div>
+      <div class="jstep" id="js3" onclick="setStep(3)">
+        <div class="jstep-circle">✓</div>
+        <div class="jstep-label">Delivered</div>
+      </div>
+    </div>
+
+    <!-- live caption that changes with step -->
+    <div class="journey-caption">
+      <div class="jc-step" id="jcStep">Step 1 of 4 — Atlanta, US</div>
+      <div class="jc-title" id="jcTitle">Package collected from your door</div>
+      <div class="jc-desc" id="jcDesc">Our driver picked up your shipment from your Atlanta address. Label printed, customs docs generated. Now heading to our hub.</div>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn-a">Get a Free Quote</button>
+      <button class="btn-b">Track a Shipment</button>
+    </div>
+
+    <div class="metrics">
+      <div><div class="mnum">98.2%</div><div class="mlbl">On-time delivery</div></div>
+      <div><div class="mnum">12K+</div><div class="mlbl">Families served</div></div>
+      <div><div class="mnum">3 days</div><div class="mlbl">US → Lagos express</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const steps = [
+  {
+    label: 'Step 1 of 4 — Atlanta, US',
+    title: 'Package collected from your door',
+    desc: 'Our driver picked up your shipment from your Atlanta address. Label printed, customs docs generated. Heading to our hub.'
+  },
+  {
+    label: 'Step 2 of 4 — In Flight',
+    title: 'Cleared customs · Now in the air',
+    desc: 'Export cleared at JFK. Your package is on a direct flight to Lagos. Live updates every hour. ETA: tomorrow morning.'
+  },
+  {
+    label: 'Step 3 of 4 — Lagos, Nigeria',
+    title: 'Arrived at our Lagos warehouse',
+    desc: 'Package scanned in at our Ikeja hub. Import clearance complete. Our Lagos driver is loading up for delivery today.'
+  },
+  {
+    label: 'Step 4 of 4 — Delivered ✓',
+    title: 'Successfully delivered to Lekki',
+    desc: 'Delivered in 3 days, 4 hours. Photo proof taken. Recipient signed. Your family received it safely — right at their door.'
+  }
+];
+
+let currentStep = 0;
+let autoTimer = null;
+
+function setStep(n) {
+  currentStep = n;
+  // cells
+  for (let i = 0; i < 4; i++) {
+    const cell = document.getElementById('cell'+(i+1));
+    cell.classList.toggle('active', i === n);
+  }
+  // progress dots
+  for (let i = 0; i < 4; i++) {
+    const pd = document.getElementById('pd'+i);
+    pd.classList.toggle('active', i === n);
+  }
+  // journey steps
+  for (let i = 0; i < 4; i++) {
+    const js = document.getElementById('js'+i);
+    js.className = 'jstep' + (i < n ? ' done' : i === n ? ' active' : '');
+  }
+  // lines
+  for (let i = 0; i < 3; i++) {
+    const jl = document.getElementById('jl'+i);
+    jl.className = 'jstep-line' + (i < n ? ' done' : '');
+  }
+  // caption
+  document.getElementById('jcStep').textContent = steps[n].label;
+  document.getElementById('jcTitle').textContent = steps[n].title;
+  document.getElementById('jcDesc').textContent = steps[n].desc;
+  // confetti on step 4
+  if (n === 3) spawnConfetti();
+  // restart auto
+  clearInterval(autoTimer);
+  autoTimer = setInterval(autoAdvance, 3200);
+}
+
+function autoAdvance() {
+  currentStep = (currentStep + 1) % 4;
+  setStep(currentStep);
+}
+
+function spawnConfetti() {
+  const wrap = document.getElementById('confetti');
+  wrap.innerHTML = '';
+  const colors = ['#E8B84B','#C4622D','#4ADE80','#FFFDF9','#D97B48','#F59E0B'];
+  for (let i = 0; i < 22; i++) {
+    const c = document.createElement('div');
+    c.className = 'conf';
+    c.style.cssText = `
+      left:${10 + Math.random()*80}%;
+      top:${Math.random()*30}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${3+Math.random()*5}px;
+      height:${3+Math.random()*5}px;
+      animation-delay:${Math.random()*0.6}s;
+      animation-duration:${0.8+Math.random()*0.8}s;
+      transform:rotate(${Math.random()*180}deg);
+    `;
+    wrap.appendChild(c);
+  }
+}
+
+// start
+setStep(0);
+autoTimer = setInterval(autoAdvance, 3200);
+</script>

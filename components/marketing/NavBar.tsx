@@ -37,10 +37,10 @@ export function NavBar() {
           Sign in
         </Link>
         <Link
-          href="/customer/shipments/new"
+           href="/customer/ship"
           className="text-[13.5px] font-semibold text-[#FFFDF9] bg-[#1A1208] border-none cursor-pointer px-5 py-2.5 rounded-md hover:bg-[#C4622D] transition-colors duration-200 tracking-[0.01em]"
         >
-          Get a Quote
+          Send a Package
         </Link>
       </div>
     </nav>

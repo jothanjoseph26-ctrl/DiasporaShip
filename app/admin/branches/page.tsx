@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { Plus, Eye, LayoutList, GitBranch, ChevronRight, Globe, Building2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -12,8 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { DataTable, RightDrawer } from '@/components/shared';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { DataTable } from '@/components/shared';
 import { formatCurrency } from '@/lib/utils';
 
 const TYPE_COLORS: Record<string, string> = {
@@ -28,71 +36,117 @@ const STATUS_COLORS: Record<string, string> = {
   inactive: 'bg-gray-100 text-gray-700',
 };
 
-const FLAG: Record<string, string> = { US: '🇺🇸', NG: '🇳🇬', GH: '🇬🇭', KE: '🇰🇪', GB: '🇬🇧' };
+const FLAG: Record<string, string> = {
+  US: '🇺🇸',
+  NG: '🇳🇬',
+  GH: '🇬🇭',
+  KE: '🇰🇪',
+  GB: '🇬🇧',
+};
 
 interface BranchRow {
-  id: string; name: string; type: string; country: string;
-  managerName: string; isActive: boolean; commissionRate?: number;
-  shipmentCount: number; revenue: number; parentBranchId?: string;
+  id: string;
+  name: string;
+  type: string;
+  country: string;
+  managerName: string;
+  isActive: boolean;
+  commissionRate?: number;
+  shipmentCount: number;
+  revenue: number;
+  parentBranchId?: string;
 }
 
 const mockBranches: BranchRow[] = [
-  { id:'b7',name:'Atlanta HQ',type:'hq',country:'US',managerName:'Michael Chen',isActive:true,shipmentCount:456,revenue:52000 },
-  { id:'b1',name:'Lagos HQ',type:'hq',country:'NG',managerName:'Tunde Adeyemi',isActive:true,shipmentCount:892,revenue:45200,parentBranchId:'b7' },
-  { id:'b2',name:'Abuja Branch',type:'branch',country:'NG',managerName:'Amina Sani',isActive:true,shipmentCount:423,revenue:21500,parentBranchId:'b1' },
-  { id:'b3',name:'Kano Branch',type:'branch',country:'NG',managerName:'Ibrahim Musa',isActive:true,shipmentCount:187,revenue:9400,parentBranchId:'b1' },
-  { id:'b4',name:'Port Harcourt Branch',type:'branch',country:'NG',managerName:'Emeka Nwankwo',isActive:true,shipmentCount:234,revenue:11800,parentBranchId:'b1' },
-  { id:'b5',name:'Accra Agent',type:'agent',country:'GH',managerName:'Kwame Asante',isActive:true,commissionRate:5.5,shipmentCount:156,revenue:7800,parentBranchId:'b7' },
-  { id:'b6',name:'Nairobi Agent',type:'agent',country:'KE',managerName:'Wanjiku Kamau',isActive:true,commissionRate:6.0,shipmentCount:89,revenue:4500,parentBranchId:'b7' },
-  { id:'b8',name:'Enugu Sub-Branch',type:'agent',country:'NG',managerName:'Samuel Okonkwo',isActive:false,commissionRate:4.0,shipmentCount:45,revenue:2200,parentBranchId:'b2' },
+  { id: 'b7', name: 'Atlanta HQ', type: 'hq', country: 'US', managerName: 'Michael Chen', isActive: true, shipmentCount: 456, revenue: 52000 },
+  { id: 'b1', name: 'Lagos HQ', type: 'hq', country: 'NG', managerName: 'Tunde Adeyemi', isActive: true, shipmentCount: 892, revenue: 45200, parentBranchId: 'b7' },
+  { id: 'b2', name: 'Abuja Branch', type: 'branch', country: 'NG', managerName: 'Amina Sani', isActive: true, shipmentCount: 423, revenue: 21500, parentBranchId: 'b1' },
+  { id: 'b3', name: 'Kano Branch', type: 'branch', country: 'NG', managerName: 'Ibrahim Musa', isActive: true, shipmentCount: 187, revenue: 9400, parentBranchId: 'b1' },
+  { id: 'b4', name: 'Port Harcourt Branch', type: 'branch', country: 'NG', managerName: 'Emeka Nwankwo', isActive: true, shipmentCount: 234, revenue: 11800, parentBranchId: 'b1' },
+  { id: 'b5', name: 'Accra Agent', type: 'agent', country: 'GH', managerName: 'Kwame Asante', isActive: true, commissionRate: 5.5, shipmentCount: 156, revenue: 7800, parentBranchId: 'b7' },
+  { id: 'b6', name: 'Nairobi Agent', type: 'agent', country: 'KE', managerName: 'Wanjiku Kamau', isActive: true, commissionRate: 6.0, shipmentCount: 89, revenue: 4500, parentBranchId: 'b7' },
+  { id: 'b8', name: 'Enugu Sub-Branch', type: 'agent', country: 'NG', managerName: 'Samuel Okonkwo', isActive: false, commissionRate: 4.0, shipmentCount: 45, revenue: 2200, parentBranchId: 'b2' },
 ];
 
 export default function AdminBranchesPage() {
   const [view, setView] = useState<'table' | 'tree'>('table');
-  const [selectedBranch, setSelectedBranch] = useState<BranchRow | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
 
-  const columns = [
-    { key:'name', label:'Name', sortable:true, render: (b: BranchRow) => <span className="text-sm font-medium">{b.name}</span> },
-    { key:'type', label:'Type', sortable:true, render: (b: BranchRow) => <Badge className={TYPE_COLORS[b.type]}>{b.type.replace('_',' ')}</Badge> },
-    { key:'country', label:'Country', render: (b: BranchRow) => <span className="text-sm">{FLAG[b.country] || b.country}</span> },
-    { key:'managerName', label:'Manager', render: (b: BranchRow) => <span className="text-sm">{b.managerName}</span> },
-    { key:'shipmentCount', label:'Shipments', sortable:true, render: (b: BranchRow) => <span className="text-sm">{b.shipmentCount}</span> },
-    { key:'revenue', label:'Revenue', sortable:true, render: (b: BranchRow) => <span className="text-sm font-medium">{formatCurrency(b.revenue, 'USD')}</span> },
-    { key:'commissionRate', label:'Commission', render: (b: BranchRow) => <span className="text-sm">{b.commissionRate ? `${b.commissionRate}%` : '—'}</span> },
-    { key:'isActive', label:'Status', render: (b: BranchRow) => <Badge className={b.isActive ? STATUS_COLORS.active : STATUS_COLORS.inactive}>{b.isActive ? 'Active' : 'Inactive'}</Badge> },
+  const columns: {
+    key: string;
+    label: string;
+    sortable?: boolean;
+    render?: (item: BranchRow) => React.ReactNode;
+  }[] = [
     {
-      key:'actions', label:'Actions',
+      key: 'name',
+      label: 'Name',
+      sortable: true,
       render: (b: BranchRow) => (
-        <button className="p-1.5 rounded hover:bg-[var(--terra-pale)] text-gray-700 hover:text-[var(--terra)]" onClick={e => { e.stopPropagation(); setSelectedBranch(b); setDrawerOpen(true); }}>
-          <Eye size={14} />
-        </button>
+        <Link href={`/admin/branches/${b.id}`} className="text-sm font-medium hover:text-[var(--terra)]">
+          {b.name}
+        </Link>
+      ),
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      sortable: true,
+      render: (b: BranchRow) => <Badge className={TYPE_COLORS[b.type]}>{b.type.replace('_', ' ')}</Badge>,
+    },
+    { key: 'country', label: 'Country', render: (b: BranchRow) => <span className="text-sm">{FLAG[b.country] || b.country}</span> },
+    { key: 'managerName', label: 'Manager', render: (b: BranchRow) => <span className="text-sm">{b.managerName}</span> },
+    { key: 'shipmentCount', label: 'Shipments', sortable: true, render: (b: BranchRow) => <span className="text-sm">{b.shipmentCount}</span> },
+    { key: 'revenue', label: 'Revenue', sortable: true, render: (b: BranchRow) => <span className="text-sm font-medium">{formatCurrency(b.revenue, 'USD')}</span> },
+    { key: 'commissionRate', label: 'Commission', render: (b: BranchRow) => <span className="text-sm">{b.commissionRate ? `${b.commissionRate}%` : '-'}</span> },
+    {
+      key: 'isActive',
+      label: 'Status',
+      render: (b: BranchRow) => (
+        <Badge className={b.isActive ? STATUS_COLORS.active : STATUS_COLORS.inactive}>
+          {b.isActive ? 'Active' : 'Inactive'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      render: (b: BranchRow) => (
+        <Button asChild variant="ghost" size="icon" className="h-7 w-7 text-gray-700 hover:text-[var(--terra)]">
+          <Link href={`/admin/branches/${b.id}`} onClick={(e) => e.stopPropagation()}>
+            <Eye size={14} />
+          </Link>
+        </Button>
       ),
     },
   ];
 
   const renderTree = (parentId?: string, depth: number = 0) => {
-    const children = mockBranches.filter(b => b.parentBranchId === parentId || (!parentId && !b.parentBranchId));
+    const children = mockBranches.filter(
+      (b) => b.parentBranchId === parentId || (!parentId && !b.parentBranchId)
+    );
     if (children.length === 0) return null;
-    return children.map(b => (
+
+    return children.map((b) => (
       <div key={b.id}>
-        <div
-          className={`flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-[var(--terra-pale)] cursor-pointer ${depth > 0 ? 'ml-6' : ''}`}
+        <Link
+          href={`/admin/branches/${b.id}`}
+          className={`flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[var(--terra-pale)] ${depth > 0 ? 'ml-6' : ''}`}
           style={{ marginLeft: depth * 24 }}
-          onClick={() => { setSelectedBranch(b); setDrawerOpen(true); }}
         >
           <ChevronRight size={14} className="text-[var(--muted-text)]" />
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${b.type === 'hq' ? 'bg-[var(--ink)] text-white' : b.type === 'branch' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+          <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${b.type === 'hq' ? 'bg-[var(--ink)] text-white' : b.type === 'branch' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
             {b.type === 'hq' ? <Building2 size={14} /> : b.type === 'branch' ? <Globe size={14} /> : <GitBranch size={14} />}
           </div>
           <div className="flex-1">
             <div className="text-sm font-medium">{b.name}</div>
-            <div className="text-xs text-[var(--muted-text)]">{FLAG[b.country]} · {b.shipmentCount} shipments · {formatCurrency(b.revenue, 'USD')}</div>
+            <div className="text-xs text-[var(--muted-text)]">
+              {FLAG[b.country]} · {b.shipmentCount} shipments · {formatCurrency(b.revenue, 'USD')}
+            </div>
           </div>
           <Badge className={TYPE_COLORS[b.type]}>{b.type}</Badge>
           {!b.isActive && <Badge className={STATUS_COLORS.inactive}>Inactive</Badge>}
-        </div>
+        </Link>
         {renderTree(b.id, depth + 1)}
       </div>
     ));
@@ -106,69 +160,43 @@ export default function AdminBranchesPage() {
           <p className="text-xs text-[var(--muted-text)]">{mockBranches.length} branches</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex border border-[var(--border-warm)] rounded-lg overflow-hidden">
-            <button onClick={() => setView('table')} className={`px-3 py-1.5 text-xs font-medium flex items-center gap-1 ${view === 'table' ? 'bg-[var(--terra)] text-white' : 'bg-white text-gray-700'}`}>
+          <div className="flex overflow-hidden rounded-lg border border-[var(--border-warm)]">
+            <button
+              onClick={() => setView('table')}
+              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium ${view === 'table' ? 'bg-[var(--terra)] text-white' : 'bg-white text-gray-700'}`}
+            >
               <LayoutList size={12} /> Table
             </button>
-            <button onClick={() => setView('tree')} className={`px-3 py-1.5 text-xs font-medium flex items-center gap-1 ${view === 'tree' ? 'bg-[var(--terra)] text-white' : 'bg-white text-gray-700'}`}>
+            <button
+              onClick={() => setView('tree')}
+              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium ${view === 'tree' ? 'bg-[var(--terra)] text-white' : 'bg-white text-gray-700'}`}
+            >
               <GitBranch size={12} /> Tree
             </button>
           </div>
-          <Button className="gap-2 bg-[var(--terra)] hover:bg-[var(--terra-light)] text-white" onClick={() => setAddModalOpen(true)}>
+          <Button
+            className="gap-2 bg-[var(--terra)] text-white hover:bg-[var(--terra-light)]"
+            onClick={() => setAddModalOpen(true)}
+          >
             <Plus size={14} /> Add Branch
           </Button>
         </div>
       </div>
 
       {view === 'table' ? (
-        <DataTable columns={columns as any} data={mockBranches as any} onRowClick={(b: any) => { setSelectedBranch(b); setDrawerOpen(true); }} pageSize={10} />
+        <DataTable
+          columns={columns}
+          data={mockBranches}
+          onRowClick={(b) => {
+            window.location.href = `/admin/branches/${b.id}`;
+          }}
+          pageSize={10}
+        />
       ) : (
-        <div className="border border-[var(--border-warm)] rounded-[var(--radius-lg)] bg-[var(--warm-white)] p-4 space-y-1">
+        <div className="space-y-1 rounded-[var(--radius-lg)] border border-[var(--border-warm)] bg-[var(--warm-white)] p-4">
           {renderTree()}
         </div>
       )}
-
-      <RightDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Branch Details" width={480}>
-        {selectedBranch && (
-          <div className="space-y-5">
-            <div>
-              <h3 className="text-base font-semibold">{selectedBranch.name}</h3>
-              <div className="flex items-center gap-2 mt-1">
-                <Badge className={TYPE_COLORS[selectedBranch.type]}>{selectedBranch.type}</Badge>
-                <Badge className={selectedBranch.isActive ? STATUS_COLORS.active : STATUS_COLORS.inactive}>{selectedBranch.isActive ? 'Active' : 'Inactive'}</Badge>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="bg-[var(--cream)] rounded-lg p-3"><span className="text-xs text-[var(--muted-text)]">Country</span><div>{FLAG[selectedBranch.country]}</div></div>
-              <div className="bg-[var(--cream)] rounded-lg p-3"><span className="text-xs text-[var(--muted-text)]">Manager</span><div>{selectedBranch.managerName}</div></div>
-              <div className="bg-[var(--cream)] rounded-lg p-3"><span className="text-xs text-[var(--muted-text)]">Shipments (month)</span><div className="font-semibold">{selectedBranch.shipmentCount}</div></div>
-              <div className="bg-[var(--cream)] rounded-lg p-3"><span className="text-xs text-[var(--muted-text)]">Revenue</span><div className="font-semibold">{formatCurrency(selectedBranch.revenue, 'USD')}</div></div>
-              {selectedBranch.commissionRate && (
-                <div className="bg-[var(--cream)] rounded-lg p-3 col-span-2"><span className="text-xs text-[var(--muted-text)]">Commission Rate</span><div className="font-semibold">{selectedBranch.commissionRate}%</div></div>
-              )}
-            </div>
-
-            <div className="border-t border-[var(--border-warm)] pt-4">
-              <h4 className="text-sm font-semibold mb-3">Sub-Branches</h4>
-              <div className="space-y-2">
-                {mockBranches.filter(b => b.parentBranchId === selectedBranch.id).map(b => (
-                  <div key={b.id} className="flex items-center justify-between bg-[var(--cream)] rounded-lg p-3 text-sm">
-                    <div>
-                      <div className="font-medium">{b.name}</div>
-                      <div className="text-xs text-[var(--muted-text)]">{FLAG[b.country]} · {b.shipmentCount} shipments</div>
-                    </div>
-                    <Badge className={TYPE_COLORS[b.type]}>{b.type}</Badge>
-                  </div>
-                ))}
-                {mockBranches.filter(b => b.parentBranchId === selectedBranch.id).length === 0 && (
-                  <p className="text-xs text-[var(--muted-text)]">No sub-branches</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </RightDrawer>
 
       <Dialog open={addModalOpen} onOpenChange={setAddModalOpen}>
         <DialogContent className="max-w-md">
@@ -177,31 +205,73 @@ export default function AdminBranchesPage() {
             <DialogDescription>Register a new branch or agent point.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-xs font-semibold">Name</label><Input placeholder="e.g. Abuja Branch" /></div>
-            <div><label className="text-xs font-semibold">Type</label>
-              <Select><SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
-                <SelectContent><SelectItem value="hq">HQ</SelectItem><SelectItem value="branch">Branch</SelectItem><SelectItem value="agent">Agent</SelectItem><SelectItem value="partner">Partner</SelectItem></SelectContent>
-              </Select>
+            <div>
+              <label className="text-xs font-semibold">Name</label>
+              <Input placeholder="e.g. Abuja Branch" />
             </div>
-            <div><label className="text-xs font-semibold">Country</label>
-              <Select><SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
-                <SelectContent><SelectItem value="US">US</SelectItem><SelectItem value="NG">Nigeria</SelectItem><SelectItem value="GH">Ghana</SelectItem><SelectItem value="KE">Kenya</SelectItem></SelectContent>
-              </Select>
-            </div>
-            <div><label className="text-xs font-semibold">Parent Branch</label>
-              <Select><SelectTrigger><SelectValue placeholder="Select parent" /></SelectTrigger>
+            <div>
+              <label className="text-xs font-semibold">Type</label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
                 <SelectContent>
-                  {mockBranches.filter(b => b.type === 'hq' || b.type === 'branch').map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
+                  <SelectItem value="hq">HQ</SelectItem>
+                  <SelectItem value="branch">Branch</SelectItem>
+                  <SelectItem value="agent">Agent</SelectItem>
+                  <SelectItem value="partner">Partner</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div><label className="text-xs font-semibold">Manager Name</label><Input placeholder="Manager name" /></div>
+            <div>
+              <label className="text-xs font-semibold">Country</label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="US">US</SelectItem>
+                  <SelectItem value="NG">Nigeria</SelectItem>
+                  <SelectItem value="GH">Ghana</SelectItem>
+                  <SelectItem value="KE">Kenya</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs font-semibold">Parent Branch</label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select parent" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mockBranches
+                    .filter((b) => b.type === 'hq' || b.type === 'branch')
+                    .map((b) => (
+                      <SelectItem key={b.id} value={b.id}>
+                        {b.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs font-semibold">Manager Name</label>
+              <Input placeholder="Manager name" />
+            </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-xs font-semibold">Phone</label><Input placeholder="+234..." /></div>
-              <div><label className="text-xs font-semibold">Email</label><Input placeholder="branch@example.com" /></div>
+              <div>
+                <label className="text-xs font-semibold">Phone</label>
+                <Input placeholder="+234..." />
+              </div>
+              <div>
+                <label className="text-xs font-semibold">Email</label>
+                <Input placeholder="branch@example.com" />
+              </div>
             </div>
           </div>
-          <DialogFooter><Button className="bg-[var(--terra)] hover:bg-[var(--terra-light)] text-white">Add Branch</Button></DialogFooter>
+          <DialogFooter>
+            <Button className="bg-[var(--terra)] text-white hover:bg-[var(--terra-light)]">Add Branch</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

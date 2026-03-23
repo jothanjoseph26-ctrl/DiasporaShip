@@ -1,1 +1,1 @@
-export { default } from "../(customer)/layout";
+export { default } from '../(customer)/layout'

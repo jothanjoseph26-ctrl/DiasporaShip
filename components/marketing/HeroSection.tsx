@@ -328,10 +328,10 @@ export default function HeroSection() {
 
         <div className="flex gap-3 mb-12">
           <button
-            onClick={() => router.push("/customer/shipments/new")}
+            onClick={() => router.push("/customer/ship")}
             className="bg-[#C4622D] hover:bg-[#D97B48] text-[#FFFDF9] font-semibold px-6 py-3 rounded-md transition-all hover:-translate-y-0.5"
           >
-            Get a Free Quote
+            Send a Package
           </button>
           <button
             onClick={() => router.push("/track")}

@@ -167,6 +167,9 @@ const mockShipments: Shipment[] = [
     id: 's2',
     trackingNumber: 'DS-20260316-D4E5F6',
     userId: 'u1',
+    responsibleTeam: 'Domestic operations + dispatch',
+    corridor: 'NG -> NG',
+    routeLabel: 'Abuja pickup -> regional line haul -> Port Harcourt delivery',
     shipmentType: 'parcel',
     serviceType: 'standard',
     status: 'out_for_delivery',
@@ -174,29 +177,29 @@ const mockShipments: Shipment[] = [
     destinationCountry: 'NG',
     pickupAddress: {
       id: 'a3',
-      label: 'Warehouse B',
+      label: 'Abuja Hub',
       type: 'warehouse',
-      recipientName: 'LogiX Lagos',
-      recipientPhone: '+2349012345678',
-      addressLine1: 'Block 5, Alaba Int\'l Market',
-      city: 'Lagos',
-      stateProvince: 'Lagos',
-      postalCode: '10276',
+      recipientName: 'LogiX Abuja',
+      recipientPhone: '+2349023456789',
+      addressLine1: 'Plot 456, Wuse Zone 5',
+      city: 'Abuja',
+      stateProvince: 'FCT',
+      postalCode: '900001',
       country: 'NG',
       isDefaultPickup: false,
       isDefaultDelivery: false,
     },
     deliveryAddress: {
       id: 'a4',
-      label: 'Home',
-      type: 'residential',
+      label: 'Retail Store',
+      type: 'commercial',
       recipientName: 'Grace Nwosu',
       recipientPhone: '+2348023456789',
-      addressLine1: '25 Okonkwo Road',
-      addressLine2: 'Igbari Village',
-      city: 'Enugu',
-      stateProvince: 'Enugu',
-      postalCode: '400102',
+      addressLine1: '26 Trans Amadi Industrial Layout',
+      addressLine2: 'Mile 3 axis',
+      city: 'Port Harcourt',
+      stateProvince: 'Rivers',
+      postalCode: '500101',
       country: 'NG',
       isDefaultPickup: false,
       isDefaultDelivery: true,
@@ -216,12 +219,14 @@ const mockShipments: Shipment[] = [
     pickupDate: '2026-03-14',
     estimatedDeliveryDate: '2026-03-18',
     customsDocsStatus: 'not_required',
+    etaConfidence: 89,
+    complianceFlags: ['Payment confirmed', 'Domestic line-haul scanned', 'Driver assigned'],
     createdAt: '2026-03-14T08:00:00Z',
     trackingEvents: [
-      { id: 'e9', shipmentId: 's2', eventType: 'booked', description: 'Shipment booked', locationName: 'Lagos, NG', country: 'NG', occurredAt: '2026-03-14T08:00:00Z' },
-      { id: 'e10', shipmentId: 's2', eventType: 'picked_up', description: 'Package collected', locationName: 'Lagos, NG', country: 'NG', occurredAt: '2026-03-14T10:00:00Z' },
-      { id: 'e11', shipmentId: 's2', eventType: 'in_transit_domestic', description: 'In transit to Enugu', locationName: 'Onitsha Transit Hub', country: 'NG', occurredAt: '2026-03-16T06:00:00Z' },
-      { id: 'e12', shipmentId: 's2', eventType: 'out_for_delivery', description: 'Out for delivery - Driver Emeka Nwosu', locationName: 'Enugu', country: 'NG', occurredAt: '2026-03-18T07:30:00Z' },
+      { id: 'e9', shipmentId: 's2', eventType: 'booked', description: 'Domestic shipment booked', locationName: 'Abuja, NG', country: 'NG', team: 'Customer care', occurredAt: '2026-03-14T08:00:00Z' },
+      { id: 'e10', shipmentId: 's2', eventType: 'picked_up', description: 'Parcel collected from Abuja hub', locationName: 'Abuja, NG', country: 'NG', team: 'Origin warehouse', occurredAt: '2026-03-14T10:00:00Z' },
+      { id: 'e11', shipmentId: 's2', eventType: 'in_transit_domestic', description: 'Regional line haul to Port Harcourt in progress', locationName: 'Lokoja Transit Hub', country: 'NG', team: 'Line haul', occurredAt: '2026-03-16T06:00:00Z' },
+      { id: 'e12', shipmentId: 's2', eventType: 'out_for_delivery', description: 'Out for delivery - Driver Emeka Nwosu', locationName: 'Port Harcourt', country: 'NG', team: 'Driver', occurredAt: '2026-03-18T07:30:00Z' },
     ],
   },
   {
@@ -503,7 +508,7 @@ const mockKPIs: KPIData = {
 };
 
 const mockActivity: ActivityItem[] = [
-  { id: 'a1', type: 'shipment', message: 'DS-20260316-D4E5F6 marked Out for Delivery by Emeka Nwosu', time: '2 min ago', severity: 'info' },
+  { id: 'a1', type: 'shipment', message: 'DS-20260316-D4E5F6 marked Out for Delivery on Abuja -> Port Harcourt lane', time: '2 min ago', severity: 'info' },
   { id: 'a2', type: 'alert', message: 'DS-20260312-G7H8I9 customs hold — missing Form M documentation', time: '18 min ago', severity: 'warning' },
   { id: 'a3', type: 'payment', message: '$2,150 payment received from TechCorp Ltd', time: '34 min ago', severity: 'success' },
   { id: 'a4', type: 'driver', message: 'Emeka Nwosu completed 11 deliveries today — new daily record', time: '1 hr ago', severity: 'success' },
@@ -643,7 +648,7 @@ interface NotificationState {
 
 const mockNotifications: Notification[] = [
   { id: 'n1', userId: 'u1', type: 'shipment_update', title: 'Package in Transit', body: 'Your shipment DS-20260318-A1B2C3 has arrived in Lagos and is being processed', channels: ['push', 'email'], isRead: false, createdAt: '2026-03-18T06:30:00Z' },
-  { id: 'n2', userId: 'u1', type: 'delivery_update', title: 'Out for Delivery', body: 'Your shipment DS-20260316-D4E5F6 is out for delivery in Enugu', channels: ['push', 'sms'], isRead: false, createdAt: '2026-03-18T07:30:00Z' },
+  { id: 'n2', userId: 'u1', type: 'delivery_update', title: 'Out for Delivery', body: 'Your shipment DS-20260316-D4E5F6 is out for delivery in Port Harcourt', channels: ['push', 'sms'], isRead: false, createdAt: '2026-03-18T07:30:00Z' },
   { id: 'n3', userId: 'u1', type: 'customs_action', title: 'Customs Action Required', body: 'Your shipment DS-20260312-G7H8I9 requires additional documentation (Form M)', channels: ['push', 'email'], isRead: false, createdAt: '2026-03-18T09:00:00Z' },
   { id: 'n4', userId: 'u1', type: 'delivered', title: 'Delivery Confirmed', body: 'Your shipment DS-20260317-J0K1L2 has been delivered to Chief Okonkwo', channels: ['push', 'email'], isRead: true, createdAt: '2026-03-17T14:30:00Z' },
 ];
@@ -695,3 +700,8 @@ const mockVehicles: Vehicle[] = [
 export const useVehicleStore = create<VehicleState>(() => ({
   vehicles: mockVehicles,
 }));
+
+export { usePricingStore, calculatePrice } from './pricing';
+export type { PriceCalculationResult } from '@/types/pricing';
+export { useBookingStore } from './booking';
+export type { BookingQuote } from '@/store/booking';

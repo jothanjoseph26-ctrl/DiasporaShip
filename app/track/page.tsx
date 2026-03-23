@@ -22,7 +22,7 @@ const DEMO_TRACKING = {
 
 const STORY_LABELS = {
   hero: 'US pickup -> international transit -> customs -> Nigeria last-mile',
-  local: 'Local Nigeria shipment',
+  local: 'Local Nigeria shipment: Abuja -> Port Harcourt',
   customs: 'Customs hold and resolution',
   failed: 'Failed first delivery attempt',
 };
@@ -191,7 +191,7 @@ export default function TrackPage() {
                     { key: DEMO_TRACKING.hero, label: '1. Hero shipment', sub: 'Start with the primary corridor story' },
                     { key: DEMO_TRACKING.customs, label: '2. Customs exception', sub: 'Show alert, owner, and release path' },
                     { key: DEMO_TRACKING.failed, label: '3. Delivery exception', sub: 'Show failed attempt and recovery' },
-                    { key: DEMO_TRACKING.local, label: '4. Local shipment', sub: 'Use only as a short supporting story' },
+                    { key: DEMO_TRACKING.local, label: '4. Local shipment', sub: 'Abuja -> Port Harcourt domestic example' },
                   ].map((item) => (
                     <button
                       key={item.key}

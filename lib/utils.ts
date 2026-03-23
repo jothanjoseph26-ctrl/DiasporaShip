@@ -12,6 +12,67 @@ export function formatCurrency(amount: number, currency: string = 'USD'): string
   }).format(amount);
 }
 
+export function getCountryFlag(country?: string): string {
+  const flags: Record<string, string> = {
+    US: '\u{1F1FA}\u{1F1F8}',
+    NG: '\u{1F1F3}\u{1F1EC}',
+    GB: '\u{1F1EC}\u{1F1E7}',
+    UK: '\u{1F1EC}\u{1F1E7}',
+    GH: '\u{1F1EC}\u{1F1ED}',
+    KE: '\u{1F1F0}\u{1F1EA}',
+    CN: '\u{1F1E8}\u{1F1F3}',
+    FR: '\u{1F1EB}\u{1F1F7}',
+    DE: '\u{1F1E9}\u{1F1EA}',
+    AU: '\u{1F1E6}\u{1F1FA}',
+  };
+  return country ? flags[country] ?? '\u{1F310}' : '\u{1F310}';
+}
+
+export function getCorridorLabel(origin: string, destination: string): string {
+  const corridorMap: Record<string, string> = {
+    'US-NG': 'US pickup -> Nigeria last-mile',
+    'UK-NG': 'UK pickup -> Nigeria last-mile',
+    'CN-NG': 'China freight -> Nigeria customs',
+    'US-GH': 'US pickup -> Ghana delivery',
+    'US-KE': 'US pickup -> Kenya delivery',
+  };
+  return corridorMap[`${origin}-${destination}`] ?? `${origin} -> ${destination}`;
+}
+
+export function getRouteSequence(origin: string, destination: string): string {
+  return `${getCountryFlag(origin)} ${origin} -> ${getCountryFlag(destination)} ${destination}`;
+}
+
+export function getOperationalStory(origin: string, destination: string): string {
+  const stories: Record<string, string> = {
+    'US-NG': 'US pickup -> international transit -> customs clearance -> Nigeria last-mile',
+    'UK-NG': 'UK pickup -> international transit -> Nigeria delivery',
+    'CN-NG': 'China origin -> ocean transit -> customs review -> Nigeria release',
+    'NG-NG': 'Nigeria intake -> regional dispatch -> final delivery',
+  };
+  return stories[`${origin}-${destination}`] ?? `${origin} -> ${destination}`;
+}
+
+export function formatCurrencyCompact(amount: number, currency: string = 'USD'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(amount);
+}
+
+export function getCustomsDocsLabel(status: string): string {
+  const labels: Record<string, string> = {
+    not_required: 'No customs documents required',
+    pending: 'Documents pending review',
+    submitted: 'Documents submitted',
+    cleared: 'Customs docs cleared',
+    held: 'Customs docs held',
+  };
+  return labels[status] || status;
+}
+
 export function formatDate(date: string | Date, options?: Intl.DateTimeFormatOptions): string {
   return new Intl.DateTimeFormat('en-US', options ? {
     ...options,

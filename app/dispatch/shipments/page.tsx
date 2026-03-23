@@ -60,6 +60,8 @@ const mockShipments = [
   { id: 's15', trackingNumber: 'DS-20260313-O5P6Q7', type: 'fragile', status: 'pending_pickup', originCountry: 'NG', destinationCountry: 'KE', originCity: 'Lagos', destinationCity: 'Nairobi', assignedDriver: null, pickupDate: '2026-03-21', weightKg: 2.8, priority: 'high' },
 ];
 
+const curatedTrackingNumbers = ['DS-20260318-A1B2C3', 'DS-20260312-G7H8I9', 'DS-20260319-M4N5O6'];
+
 const availableDrivers = [
   { id: 'd1', name: 'Adebayo Ogundimu', distance: '2.3 km', rating: 4.8, activeJobs: 3 },
   { id: 'd2', name: 'Kwame Asante', distance: '5.1 km', rating: 4.9, activeJobs: 2 },
@@ -151,6 +153,7 @@ export default function DispatchShipmentsPage() {
 
   const filteredData = useMemo(() => {
     return mockShipments.filter((s) => {
+      if (!curatedTrackingNumbers.includes(s.trackingNumber)) return false;
       if (filterValues.status && s.status !== filterValues.status) return false;
       if (filterValues.driver === 'assigned' && !s.assignedDriver) return false;
       if (filterValues.driver === 'unassigned' && s.assignedDriver) return false;
@@ -162,6 +165,9 @@ export default function DispatchShipmentsPage() {
 
   return (
     <div className="space-y-4">
+      <div className="rounded-2xl border border-[#E8DDD0] bg-[#FAF6EF] p-4 text-sm text-[#8C7B6B]">
+        Dispatch shipments is intentionally limited to the hero walkthrough and its two exception stories to keep the client demo on one operating path.
+      </div>
       <FilterBar
         filters={filters}
         onFilterChange={handleFilterChange}

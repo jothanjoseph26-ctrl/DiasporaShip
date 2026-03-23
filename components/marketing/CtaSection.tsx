@@ -84,7 +84,7 @@ export function CtaSection() {
   };
 
   const handleBook = () => {
-    router.push('/customer/shipments/new');
+    router.push('/customer/ship');
   };
 
   const scrollToCalculator = () => {
@@ -114,12 +114,12 @@ export function CtaSection() {
           Get a free quote in 60 seconds. No account needed. Our team is available 7 days a week to help you ship anything, anywhere in Africa.
         </p>
         <div className="flex gap-3">
-          <button
-            onClick={scrollToCalculator}
+          <a
+            href="/customer/ship"
             className="bg-[#E8B84B] hover:bg-[#C9972B] text-[#1A1208] font-semibold px-8 py-4 rounded-md transition-all hover:-translate-y-0.5"
           >
-            Get a Free Quote
-          </button>
+            Send a Package
+          </a>
           <a
             href="https://wa.me/14045551234"
             target="_blank"

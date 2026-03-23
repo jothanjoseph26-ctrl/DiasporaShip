@@ -22,6 +22,7 @@ import { Progress } from '@/components/ui/progress';
 import { TrackingTimeline } from '@/components/shared/TrackingTimeline';
 import { useShipmentStore, useAuthStore } from '@/store';
 import { formatCurrency, formatDateTime, getCountryFlag, getCorridorLabel, getCustomsDocsLabel, getStatusLabel } from '@/lib/utils';
+import type { Shipment } from '@/types';
 
 const JOURNEY_STEPS = [
   'booked',
@@ -49,11 +50,99 @@ function getTrustPill(status: string) {
   return { label: 'Cross-border visibility active', tone: 'bg-blue-100 text-blue-700 border-blue-200' };
 }
 
+function buildProvisionalShipment(trackingNumber: string): Shipment {
+  return {
+    id: `preview-${trackingNumber}`,
+    trackingNumber,
+    userId: 'preview-user',
+    responsibleTeam: 'Customer care + origin warehouse',
+    corridor: 'US -> NG',
+    routeLabel: 'US pickup -> international transit -> customs clearance -> Nigeria last-mile delivery',
+    shipmentType: 'parcel',
+    serviceType: 'express',
+    status: 'pending_pickup',
+    originCountry: 'US',
+    destinationCountry: 'NG',
+    pickupAddress: {
+      id: 'preview-pickup',
+      label: 'Pickup',
+      type: 'commercial',
+      recipientName: 'Booking preview',
+      recipientPhone: '+14045551234',
+      addressLine1: '123 Commerce St',
+      city: 'Atlanta',
+      stateProvince: 'GA',
+      postalCode: '30301',
+      country: 'US',
+      isDefaultPickup: true,
+      isDefaultDelivery: false,
+    },
+    deliveryAddress: {
+      id: 'preview-delivery',
+      label: 'Delivery',
+      type: 'commercial',
+      recipientName: 'Destination contact',
+      recipientPhone: '+2348012345678',
+      addressLine1: '15 Admiralty Way',
+      city: 'Lagos',
+      stateProvince: 'Lagos',
+      postalCode: '10176',
+      country: 'NG',
+      isDefaultPickup: false,
+      isDefaultDelivery: true,
+    },
+    weightKg: 5.2,
+    chargeableWeightKg: 5.2,
+    declaredValue: 850,
+    currency: 'USD',
+    packageDescription: 'Freshly booked shipment awaiting first operational scan',
+    isInsured: true,
+    insuranceCost: 13,
+    shippingCost: 165,
+    customsDuties: 35,
+    totalCost: 213,
+    paymentStatus: 'paid',
+    paymentMethod: 'card',
+    pickupDate: new Date().toISOString().slice(0, 10),
+    estimatedDeliveryDate: 'Pending first scan',
+    customsDocsStatus: 'submitted',
+    requiresCustoms: true,
+    customsReference: 'Pending first scan',
+    etaConfidence: 74,
+    complianceFlags: ['Booking confirmed', 'Payment recorded', 'Docs prepared'],
+    notes: 'This is a prototype preview generated from a just-booked shipment before warehouse intake.',
+    createdAt: new Date().toISOString(),
+    trackingEvents: [
+      {
+        id: `${trackingNumber}-booked`,
+        shipmentId: `preview-${trackingNumber}`,
+        eventType: 'booked',
+        description: 'Shipment booked and payment confirmed',
+        locationName: 'Customer portal',
+        team: 'Customer care',
+        country: 'US',
+        occurredAt: new Date().toISOString(),
+      },
+      {
+        id: `${trackingNumber}-queued`,
+        shipmentId: `preview-${trackingNumber}`,
+        eventType: 'pending_pickup',
+        description: 'Awaiting first warehouse scan and pickup assignment',
+        locationName: 'Atlanta origin queue',
+        team: 'Origin warehouse',
+        country: 'US',
+        occurredAt: new Date().toISOString(),
+      },
+    ],
+  };
+}
+
 export default function TrackingDetailPage() {
   const params = useParams<{ trackingNumber: string }>();
   const { getShipmentByTracking } = useShipmentStore();
   const { isAuthenticated } = useAuthStore();
-  const shipment = getShipmentByTracking(decodeURIComponent(params.trackingNumber));
+  const requestedTrackingNumber = decodeURIComponent(params.trackingNumber).toUpperCase();
+  const shipment = getShipmentByTracking(requestedTrackingNumber) ?? (requestedTrackingNumber.startsWith('DS-') ? buildProvisionalShipment(requestedTrackingNumber) : null);
 
   if (!shipment) {
     notFound();

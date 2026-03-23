@@ -3,6 +3,7 @@
 import {
   BarChart3,
   CreditCard,
+  DollarSign,
   FileText,
   Globe,
   HelpCircle,
@@ -45,6 +46,12 @@ const ADMIN_CONFIG: PortalConfig = {
       ],
     },
     {
+      section: "Pricing",
+      items: [
+        { href: "/admin/pricing", icon: DollarSign, label: "Pricing Management" },
+      ],
+    },
+    {
       section: "People",
       items: [
         { href: "/admin/users", icon: Users, label: "Users" },
@@ -72,6 +79,7 @@ const TITLES: Record<string, string> = {
   "/admin/vehicles": "Fleet",
   "/admin/warehouse": "Warehouses",
   "/admin/customs": "Customs",
+  "/admin/pricing": "Pricing Management",
   "/admin/users": "Users",
   "/admin/kyc": "KYC Review",
   "/admin/branches": "Branches",

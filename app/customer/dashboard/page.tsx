@@ -97,7 +97,7 @@ export default function DashboardPage() {
             asChild
             className="bg-[var(--terra)] hover:bg-[var(--terra-light)] text-white"
           >
-            <Link href="/customer/shipments/new">
+            <Link href="/customer/ship">
               <Plus className="h-4 w-4 mr-1" />
               Ship Now
             </Link>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                     Create your first shipment to get started.
                   </p>
                   <Button asChild className="bg-[var(--terra)] hover:bg-[var(--terra-light)] text-white">
-                    <Link href="/customer/shipments/new">
+                    <Link href="/customer/ship">
                       <Plus className="h-4 w-4 mr-1" />
                       Ship Now
                     </Link>

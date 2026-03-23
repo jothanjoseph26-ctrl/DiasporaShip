@@ -94,8 +94,8 @@ export function Corridors() {
               className={`flex items-center justify-between p-[18px] bg-[#FFFDF9] rounded-[10px] cursor-pointer transition-all duration-200 border border-transparent ${
                 corridor.disabled ? "opacity-50 pointer-events-none" : "hover:border-[#C4622D] hover:translate-x-1"
               }`}
-              onClick={corridor.disabled ? undefined : () => window.location.href = '/customer/shipments/new'}
-              onKeyDown={corridor.disabled ? undefined : (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.location.href = '/customer/shipments/new'; } }}
+              onClick={corridor.disabled ? undefined : () => window.location.href = '/customer/ship'}
+              onKeyDown={corridor.disabled ? undefined : (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.location.href = '/customer/ship'; } }}
               role={corridor.disabled ? undefined : "button"}
               tabIndex={corridor.disabled ? undefined : 0}
               aria-disabled={corridor.disabled ? true : undefined}

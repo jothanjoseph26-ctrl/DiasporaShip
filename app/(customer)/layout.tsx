@@ -42,7 +42,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
         items: [
           { href: "/customer/dashboard", icon: Home, label: "Dashboard" },
           { href: "/customer/shipments", icon: Package, label: "Shipments" },
-          { href: "/customer/shipments/new", icon: Plus, label: "Ship Now" },
+          { href: "/customer/ship", icon: Plus, label: "Ship Now" },
           { href: "/customer/wallet", icon: Wallet, label: "Wallet" },
         ],
       },

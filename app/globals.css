@@ -21,24 +21,24 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 34 38% 96%;
     --foreground: 24 14% 7%;
-    --card: 0 0% 100%;
+    --card: 36 60% 99%;
     --card-foreground: 24 14% 7%;
-    --popover: 0 0% 100%;
+    --popover: 36 60% 99%;
     --popover-foreground: 24 14% 7%;
     --primary: 16 53% 50%;
     --primary-foreground: 36 100% 98%;
-    --secondary: 34 45% 95%;
+    --secondary: 32 34% 90%;
     --secondary-foreground: 24 14% 7%;
-    --muted: 34 45% 95%;
-    --muted-foreground: 26 9% 45%;
-    --accent: 38 70% 90%;
+    --muted: 34 35% 92%;
+    --muted-foreground: 24 12% 34%;
+    --accent: 31 60% 89%;
     --accent-foreground: 24 14% 7%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 36 100% 98%;
-    --border: 34 30% 88%;
-    --input: 34 30% 88%;
+    --border: 30 24% 80%;
+    --input: 30 24% 80%;
     --ring: 16 53% 50%;
     --radius: 0.5rem;
     --success: 142 71% 35%;
@@ -46,24 +46,24 @@
   }
 
   .dark {
-    --background: 24 14% 7%;
-    --foreground: 36 100% 98%;
-    --card: 24 14% 7%;
-    --card-foreground: 36 100% 98%;
-    --popover: 24 14% 7%;
-    --popover-foreground: 36 100% 98%;
+    --background: 24 18% 8%;
+    --foreground: 36 60% 96%;
+    --card: 24 18% 11%;
+    --card-foreground: 36 60% 96%;
+    --popover: 24 18% 11%;
+    --popover-foreground: 36 60% 96%;
     --primary: 16 53% 58%;
     --primary-foreground: 24 14% 7%;
-    --secondary: 24 14% 15%;
-    --secondary-foreground: 36 100% 98%;
-    --muted: 24 14% 15%;
-    --muted-foreground: 36 100% 65%;
-    --accent: 24 14% 15%;
-    --accent-foreground: 36 100% 98%;
+    --secondary: 24 18% 16%;
+    --secondary-foreground: 36 60% 96%;
+    --muted: 24 16% 14%;
+    --muted-foreground: 34 24% 72%;
+    --accent: 24 18% 18%;
+    --accent-foreground: 36 60% 96%;
     --destructive: 0 62% 50%;
-    --destructive-foreground: 36 100% 98%;
-    --border: 24 14% 20%;
-    --input: 24 14% 20%;
+    --destructive-foreground: 36 60% 96%;
+    --border: 24 14% 24%;
+    --input: 24 14% 24%;
     --ring: 16 53% 58%;
   }
 }
@@ -156,23 +156,23 @@ html {
 }
 
 :root {
-  --terra: #c4622d;
-  --terra-light: #d97b48;
-  --terra-pale: #f5ebe0;
-  --terra-dark: #8b3d18;
+  --terra: hsl(var(--primary));
+  --terra-light: hsl(var(--primary) / 0.82);
+  --terra-pale: hsl(var(--primary) / 0.1);
+  --terra-dark: hsl(var(--primary) / 0.72);
   --gold: #c9972b;
   --gold-light: #e8b84b;
   --gold-pale: #fbf3dc;
   --gold-dark: #8b6618;
-  --ink: #1a1208;
-  --ink-soft: #2d1f10;
-  --ink-muted: #5c3a1e;
-  --cream: #faf6ef;
-  --cream-dark: #f0eae0;
-  --warm-white: #fffdf9;
-  --muted-text: #8c7b6b;
-  --border-warm: #e8ddd0;
-  --border-strong: #d4c4b0;
+  --ink: hsl(var(--foreground));
+  --ink-soft: hsl(var(--foreground) / 0.92);
+  --ink-muted: hsl(var(--muted-foreground));
+  --cream: hsl(34 32% 92%);
+  --cream-dark: hsl(32 28% 87%);
+  --warm-white: hsl(36 70% 98%);
+  --muted-text: hsl(24 12% 34%);
+  --border-warm: hsl(30 24% 80%);
+  --border-strong: hsl(28 22% 70%);
   --accent-customer: var(--terra);
   --accent-driver: #059669;
   --accent-dispatch: #2563eb;
@@ -186,6 +186,19 @@ html {
   --shadow-md: 0 4px 16px rgba(26, 18, 8, 0.1);
   --shadow-lg: 0 8px 40px rgba(26, 18, 8, 0.12);
   --shadow-card: 0 1px 4px rgba(26, 18, 8, 0.07), 0 4px 16px rgba(26, 18, 8, 0.06);
+}
+
+.dark {
+  --terra-pale: hsl(var(--primary) / 0.16);
+  --terra-dark: hsl(var(--primary) / 0.9);
+  --gold-pale: color-mix(in srgb, var(--gold) 18%, transparent);
+  --gold-dark: #f4d27a;
+  --cream: hsl(24 15% 12%);
+  --cream-dark: hsl(24 14% 16%);
+  --warm-white: hsl(24 16% 10%);
+  --muted-text: hsl(34 20% 72%);
+  --border-warm: hsl(24 14% 24%);
+  --border-strong: hsl(24 14% 32%);
 }
 
 .heading-lg {
@@ -432,4 +445,90 @@ html {
     transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0);
     opacity: 0;
   }
+}
+
+.booking-shell {
+  background:
+    radial-gradient(circle at top left, rgba(217, 123, 72, 0.14), transparent 34%),
+    radial-gradient(circle at top right, rgba(201, 151, 43, 0.12), transparent 30%),
+    linear-gradient(180deg, #f5ede2 0%, #f8f3ea 42%, #fbf8f3 100%);
+}
+
+.booking-hero {
+  background: linear-gradient(145deg, #20140d 0%, #3b2416 52%, #6d3a1f 100%);
+  border: 1px solid rgba(255, 244, 232, 0.18);
+  box-shadow: 0 18px 48px rgba(34, 19, 11, 0.22);
+}
+
+.booking-hero-card {
+  background: rgba(255, 249, 241, 0.12);
+  border: 1px solid rgba(255, 244, 232, 0.2);
+  backdrop-filter: blur(6px);
+}
+
+.booking-panel {
+  background: rgba(255, 252, 247, 0.94);
+  border: 1px solid #d9c8b3;
+  box-shadow: 0 14px 36px rgba(44, 26, 16, 0.08);
+}
+
+.booking-side-panel {
+  background: linear-gradient(180deg, #fffaf3 0%, #f4ecde 100%);
+  border: 1px solid #dcc9b5;
+  box-shadow: 0 14px 36px rgba(44, 26, 16, 0.08);
+}
+
+.booking-soft-panel {
+  background: #f2e7d7;
+  border: 1px solid #d8c1a6;
+}
+
+.booking-card {
+  background: #fffaf4;
+  border: 1px solid #d7c2aa;
+  box-shadow: 0 10px 26px rgba(44, 26, 16, 0.06);
+}
+
+.booking-card:hover {
+  border-color: #bb7347;
+}
+
+.booking-card-selected {
+  background: linear-gradient(180deg, #fff1df 0%, #f8ddc0 100%);
+  border-color: #b9642f;
+  box-shadow: 0 14px 30px rgba(196, 98, 45, 0.18);
+}
+
+.booking-pill {
+  background: linear-gradient(180deg, #fff8ef 0%, #f1e2cf 100%);
+  border: 1px solid #d4bea5;
+  color: #5f4735;
+  box-shadow: 0 6px 16px rgba(55, 34, 22, 0.06);
+}
+
+.booking-pill-active {
+  background: linear-gradient(180deg, #f2b07f 0%, #d97b48 100%);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fffaf3;
+  box-shadow: 0 10px 22px rgba(120, 57, 26, 0.28);
+}
+
+.booking-field {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.booking-field::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.booking-field:focus-visible {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15);
+}
+
+.booking-quiet {
+  color: hsl(var(--muted-foreground));
 }

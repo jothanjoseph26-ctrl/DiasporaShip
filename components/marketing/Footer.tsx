@@ -2,8 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 const shipLinks = [
-  { label: "Get a Quote", href: "/customer/shipments/new" },
-  { label: "Book a Pickup", href: "/customer/shipments/new" },
+  { label: "Get a Quote", href: "/customer/ship" },
+  { label: "Book a Pickup", href: "/customer/ship" },
   { label: "Track Shipment", href: "/track" },
   { label: "Pricing", href: "/pricing" },
   { label: "Packaging Guide", href: "/guides/packaging" },

@@ -6,7 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useDriverStore, useShipmentStore } from '@/store';
 import { formatCurrency, getOperationalStory } from '@/lib/utils';
-import { CheckCircle2, Clock, Navigation, Phone, Truck } from 'lucide-react';
+import { Clock, Navigation, Truck } from 'lucide-react';
+
+const dashboardCard = 'border-border/70 bg-card/95 text-card-foreground shadow-sm';
 
 export default function DriverHome() {
   const router = useRouter();
@@ -17,31 +19,31 @@ export default function DriverHome() {
 
   return (
     <div className="space-y-4 pb-6">
-      <Card className={isOnline ? 'border-emerald-200 bg-emerald-50/60' : 'border-gray-200 bg-gray-50/60'}>
+      <Card className={isOnline ? 'border-emerald-200 bg-emerald-50/60' : 'border-border/70 bg-muted/40'}>
         <CardContent className="flex items-center justify-between gap-4 p-5">
           <div>
-            <p className="text-base font-semibold text-[#1A1208]">{isOnline ? 'Online and ready' : 'Driver offline'}</p>
-            <p className="text-sm text-[#8C7B6B]">{currentDriver?.name} is handling the delivery retry and POD flow.</p>
+            <p className="text-base font-semibold text-foreground">{isOnline ? 'Online and ready' : 'Driver offline'}</p>
+            <p className="text-sm text-muted-foreground">{currentDriver?.name} is handling the delivery retry and POD flow.</p>
           </div>
-          <Button variant="outline" onClick={toggleOnline}>{isOnline ? 'Go offline' : 'Go online'}</Button>
+          <Button variant="outline" className="border-border text-foreground hover:bg-muted" onClick={toggleOnline}>{isOnline ? 'Go offline' : 'Go online'}</Button>
         </CardContent>
       </Card>
 
-      <Card className="border-[#E8DDD0] bg-white">
+      <Card className={dashboardCard}>
         <CardContent className="space-y-3 p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-[#1A1208]">Active job</p>
-              <p className="text-xs text-[#8C7B6B]">{activeJob?.routeLabel ?? getOperationalStory(activeJob?.originCountry ?? 'NG', activeJob?.destinationCountry ?? 'NG')}</p>
+              <p className="text-sm font-semibold text-foreground">Active job</p>
+              <p className="text-xs text-muted-foreground">{activeJob?.routeLabel ?? getOperationalStory(activeJob?.originCountry ?? 'NG', activeJob?.destinationCountry ?? 'NG')}</p>
             </div>
-            <Badge className="bg-[#F5EBE0] text-[var(--ink)]">{activeJob?.trackingNumber}</Badge>
+            <Badge className="border border-border/70 bg-muted text-foreground">{activeJob?.trackingNumber}</Badge>
           </div>
-          <div className="rounded-2xl border border-[#E8DDD0] bg-[#FAF6EF] p-4">
-            <div className="flex items-center gap-2 text-sm font-semibold text-[#1A1208]">
-              <Truck className="h-4 w-4 text-[#C4622D]" />
+          <div className="rounded-2xl border border-border/70 bg-muted/50 p-4">
+            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <Truck className="h-4 w-4 text-primary" />
               First delivery failed, reattempt pending
             </div>
-            <p className="mt-2 text-sm text-[#8C7B6B]">Customer has been notified and the next trip is queued with OTP handoff.</p>
+            <p className="mt-2 text-sm text-muted-foreground">Customer has been notified and the next trip is queued with OTP handoff.</p>
           </div>
           <Button className="w-full bg-[#C4622D] text-white hover:bg-[#D97B48]" onClick={() => router.push('/driver/jobs/j1')}>
             <Navigation className="mr-2 h-4 w-4" />
@@ -51,18 +53,18 @@ export default function DriverHome() {
       </Card>
 
       <div className="grid gap-3 md:grid-cols-3">
-        <Card><CardContent className="p-4 text-center"><p className="text-xs text-[#8C7B6B]">Today</p><p className="mt-1 text-lg font-bold text-[#1A1208]">{formatCurrency(127.5, 'USD')}</p></CardContent></Card>
-        <Card><CardContent className="p-4 text-center"><p className="text-xs text-[#8C7B6B]">Completion</p><p className="mt-1 text-lg font-bold text-[#1A1208]">98.1%</p></CardContent></Card>
-        <Card><CardContent className="p-4 text-center"><p className="text-xs text-[#8C7B6B]">Hero shipment</p><p className="mt-1 text-lg font-bold text-[#1A1208]">{hero?.status}</p></CardContent></Card>
+        <Card className={dashboardCard}><CardContent className="p-4 text-center"><p className="text-xs text-muted-foreground">Today</p><p className="mt-1 text-lg font-bold text-foreground">{formatCurrency(127.5, 'USD')}</p></CardContent></Card>
+        <Card className={dashboardCard}><CardContent className="p-4 text-center"><p className="text-xs text-muted-foreground">Completion</p><p className="mt-1 text-lg font-bold text-foreground">98.1%</p></CardContent></Card>
+        <Card className={dashboardCard}><CardContent className="p-4 text-center"><p className="text-xs text-muted-foreground">Hero shipment</p><p className="mt-1 text-lg font-bold text-foreground">{hero?.status}</p></CardContent></Card>
       </div>
 
-      <Card className="border-[#E8DDD0] bg-white">
+      <Card className={dashboardCard}>
         <CardContent className="p-5">
-          <div className="flex items-center gap-2 text-sm font-semibold text-[#1A1208]">
-            <Clock className="h-4 w-4 text-[#C4622D]" />
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Clock className="h-4 w-4 text-primary" />
             Delivery evidence
           </div>
-          <p className="mt-2 text-sm text-[#8C7B6B]">Capture photo, signature, OTP, location, and timestamp before closing the shipment.</p>
+          <p className="mt-2 text-sm text-muted-foreground">Capture photo, signature, OTP, location, and timestamp before closing the shipment.</p>
         </CardContent>
       </Card>
     </div>

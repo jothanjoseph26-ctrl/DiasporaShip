@@ -27,6 +27,14 @@ export interface PortalConfig {
   nav: NavSection[];
 }
 
+const PORTAL_SIDEBAR_BG = "linear-gradient(180deg, #16100c 0%, #211811 45%, #2b1f16 100%)";
+const PORTAL_SIDEBAR_BORDER = "rgba(255,244,232,0.08)";
+const PORTAL_PANEL_BG = "linear-gradient(180deg, #231913 0%, #2a1f17 100%)";
+const PORTAL_PANEL_BORDER = "rgba(255,244,232,0.12)";
+const PORTAL_TEXT = "#FFF8F1";
+const PORTAL_TEXT_MUTED = "rgba(255,248,241,0.68)";
+const PORTAL_TEXT_FAINT = "rgba(255,248,241,0.32)";
+
 export function PortalSidebar({
   config,
   collapsed,
@@ -44,8 +52,8 @@ export function PortalSidebar({
     <aside
       style={{
         width: "240px",
-        background: "var(--ink)",
-        borderRight: "1px solid rgba(255,253,249,0.07)",
+        background: PORTAL_SIDEBAR_BG,
+        borderRight: `1px solid ${PORTAL_SIDEBAR_BORDER}`,
         display: "flex",
         flexDirection: "column",
         height: "100vh",
@@ -58,7 +66,7 @@ export function PortalSidebar({
       <div
         style={{
           padding: "18px 20px 14px",
-          borderBottom: "1px solid rgba(255,253,249,0.07)",
+          borderBottom: `1px solid ${PORTAL_SIDEBAR_BORDER}`,
           flexShrink: 0,
         }}
       >
@@ -67,7 +75,7 @@ export function PortalSidebar({
             fontFamily: "var(--font-playfair)",
             fontSize: "19px",
             fontWeight: 700,
-            color: "var(--warm-white)",
+            color: PORTAL_TEXT,
           }}
         >
           Diaspora<span style={{ color: config.accentColor }}>Ship</span>
@@ -78,7 +86,7 @@ export function PortalSidebar({
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
-            color: "rgba(255,253,249,0.28)",
+            color: PORTAL_TEXT_FAINT,
             marginTop: "2px",
           }}
         >
@@ -96,7 +104,7 @@ export function PortalSidebar({
                 fontWeight: 600,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
-                color: "rgba(255,253,249,0.22)",
+                color: PORTAL_TEXT_FAINT,
               }}
             >
               {section.section}
@@ -119,8 +127,9 @@ export function PortalSidebar({
                       borderRadius: "7px",
                       fontSize: "13.5px",
                       fontWeight: isActive ? 600 : 500,
-                      color: isActive ? config.accentColor : "rgba(255,253,249,0.52)",
+                      color: isActive ? "#FFD7C2" : PORTAL_TEXT_MUTED,
                       background: isActive ? config.accentBg : "transparent",
+                      border: isActive ? `1px solid ${config.accentColor}33` : "1px solid transparent",
                       transition: "all 0.15s",
                       cursor: "pointer",
                       whiteSpace: "nowrap",
@@ -134,7 +143,7 @@ export function PortalSidebar({
                           fontSize: "10px",
                           fontWeight: 700,
                           background: config.accentColor,
-                          color: "var(--warm-white)",
+                          color: PORTAL_TEXT,
                           padding: "1px 6px",
                           borderRadius: "10px",
                         }}
@@ -153,7 +162,7 @@ export function PortalSidebar({
       <div
         style={{
           padding: "14px 16px",
-          borderTop: "1px solid rgba(255,253,249,0.07)",
+          borderTop: `1px solid ${PORTAL_SIDEBAR_BORDER}`,
           display: "flex",
           alignItems: "center",
           gap: "10px",
@@ -171,7 +180,7 @@ export function PortalSidebar({
             justifyContent: "center",
             fontSize: "11px",
             fontWeight: 700,
-            color: "var(--warm-white)",
+            color: PORTAL_TEXT,
             flexShrink: 0,
           }}
         >
@@ -182,7 +191,7 @@ export function PortalSidebar({
             style={{
               fontSize: "13px",
               fontWeight: 600,
-              color: "rgba(255,253,249,0.88)",
+              color: PORTAL_TEXT,
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -190,7 +199,7 @@ export function PortalSidebar({
           >
             {config.userLabel}
           </div>
-          <div style={{ fontSize: "11px", color: "rgba(255,253,249,0.32)" }}>{config.userEmail}</div>
+          <div style={{ fontSize: "11px", color: PORTAL_TEXT_FAINT }}>{config.userEmail}</div>
         </div>
         <button
           type="button"
@@ -198,7 +207,7 @@ export function PortalSidebar({
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "rgba(255,253,249,0.28)",
+            color: PORTAL_TEXT_FAINT,
           }}
         >
           <LogOut size={13} />
@@ -227,8 +236,8 @@ export function PortalTopBar({
     <header
       style={{
         height: "56px",
-        background: "var(--warm-white)",
-        borderBottom: "1px solid var(--border-warm)",
+        background: PORTAL_PANEL_BG,
+        borderBottom: `1px solid ${PORTAL_PANEL_BORDER}`,
         display: "flex",
         alignItems: "center",
         padding: "0 20px",
@@ -246,7 +255,7 @@ export function PortalTopBar({
           background: "none",
           border: "none",
           cursor: "pointer",
-          color: "var(--muted-text)",
+          color: PORTAL_TEXT_MUTED,
           display: "flex",
           alignItems: "center",
         }}
@@ -260,14 +269,14 @@ export function PortalTopBar({
             fontFamily: "var(--font-playfair)",
             fontSize: "16px",
             fontWeight: 700,
-            color: "var(--ink)",
+            color: PORTAL_TEXT,
             lineHeight: 1.2,
           }}
         >
           {pageTitle}
         </div>
         {pageSub ? (
-          <div style={{ fontSize: "11px", color: "var(--muted-text)", marginTop: "1px" }}>{pageSub}</div>
+          <div style={{ fontSize: "11px", color: PORTAL_TEXT_MUTED, marginTop: "1px" }}>{pageSub}</div>
         ) : null}
       </div>
 
@@ -277,14 +286,14 @@ export function PortalTopBar({
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            background: "var(--cream)",
-            border: "1px solid var(--border-warm)",
+            background: "rgba(255,248,241,0.04)",
+            border: `1px solid ${PORTAL_PANEL_BORDER}`,
             borderRadius: "7px",
             padding: "7px 12px",
             width: "200px",
           }}
         >
-          <Search size={13} style={{ color: "var(--muted-text)", flexShrink: 0 }} />
+          <Search size={13} style={{ color: PORTAL_TEXT_FAINT, flexShrink: 0 }} />
           <input
             placeholder="Search..."
             style={{
@@ -292,7 +301,7 @@ export function PortalTopBar({
               border: "none",
               outline: "none",
               fontSize: "13px",
-              color: "var(--ink)",
+              color: PORTAL_TEXT,
               width: "100%",
               fontFamily: "var(--font-instrument)",
             }}
@@ -307,7 +316,7 @@ export function PortalTopBar({
           background: "none",
           border: "none",
           cursor: "pointer",
-          color: "var(--muted-text)",
+          color: PORTAL_TEXT_MUTED,
           padding: "6px",
           borderRadius: "7px",
           display: "flex",
@@ -322,9 +331,9 @@ export function PortalTopBar({
             right: "4px",
             width: "7px",
             height: "7px",
-            background: "var(--terra)",
+            background: accentColor,
             borderRadius: "50%",
-            border: "1.5px solid var(--warm-white)",
+            border: `1.5px solid ${PORTAL_PANEL_BG}`,
           }}
         />
       </button>
@@ -335,7 +344,7 @@ export function PortalTopBar({
           alignItems: "center",
           gap: "8px",
           padding: "5px 10px",
-          border: "1px solid var(--border-warm)",
+          border: `1px solid ${PORTAL_PANEL_BORDER}`,
           borderRadius: "20px",
           cursor: "pointer",
         }}
@@ -351,12 +360,12 @@ export function PortalTopBar({
             justifyContent: "center",
             fontSize: "10px",
             fontWeight: 700,
-            color: "var(--warm-white)",
+            color: PORTAL_TEXT,
           }}
         >
           {userInitials}
         </div>
-        <ChevronDown size={12} style={{ color: "var(--muted-text)" }} />
+        <ChevronDown size={12} style={{ color: PORTAL_TEXT_FAINT }} />
       </div>
     </header>
   );

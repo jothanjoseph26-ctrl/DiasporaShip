@@ -135,7 +135,7 @@ export function Pricing() {
             </div>
 
             <button
-              onClick={() => router.push(plan.tier === 'Business' ? '/contact' : '/customer/shipments/new')}
+              onClick={() => router.push(plan.tier === 'Business' ? '/contact' : '/customer/ship')}
               className={`w-full py-3.5 rounded-lg text-[14px] font-semibold transition-all duration-200 ${
                 plan.featured
                   ? "bg-[#C4622D] border border-[#C4622D] text-[#FFFDF9] hover:bg-[#D97B48]"

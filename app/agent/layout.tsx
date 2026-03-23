@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, LayoutDashboard, Package, Settings, Truck, Users } from "lucide-react";
+import { BarChart3, LayoutDashboard, Package, Settings, Truck, Users, PlusCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { PortalShell, type PortalConfig } from "@/components/shared/PortalShell";
 
@@ -12,6 +12,12 @@ const AGENT_CONFIG: PortalConfig = {
   userEmail: "agent@diasporaship.com",
   userInitials: "KA",
   nav: [
+    {
+      section: "Counter",
+      items: [
+        { href: "/agent/counter", icon: PlusCircle, label: "New Booking" },
+      ],
+    },
     {
       section: "Branch",
       items: [
@@ -33,6 +39,7 @@ const AGENT_CONFIG: PortalConfig = {
 
 const TITLES: Record<string, string> = {
   "/agent": "Branch Overview",
+  "/agent/counter": "Walk-in Counter",
   "/agent/shipments": "Shipments",
   "/agent/customers": "Customers",
   "/agent/drivers": "Drivers",

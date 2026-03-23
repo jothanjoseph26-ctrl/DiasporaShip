@@ -34,6 +34,7 @@ import {
   type InternationalCorridorId,
 } from '@/lib/corridors'
 import { getAIWeightSuggestion, getAIDimensionSuggestion, validateWeightDimensions, type AIWeightSuggestion, type AIDimensionSuggestion } from '@/lib/ai-pricing'
+import type { Address } from '@/types'
 
 type ShipmentCategory = 'international' | 'domestic'
 
@@ -95,6 +96,20 @@ function NewShipmentContent() {
   const [domesticRegion, setDomesticRegion] = useState<'NG' | 'GH' | 'KE'>('NG')
   const [fromCity, setFromCity] = useState('')
   const [toCity, setToCity] = useState('')
+  const [domesticPickupForm, setDomesticPickupForm] = useState({
+    recipientName: '',
+    recipientPhone: '',
+    addressLine1: '',
+    addressLine2: '',
+    stateProvince: '',
+  })
+  const [domesticDeliveryForm, setDomesticDeliveryForm] = useState({
+    recipientName: '',
+    recipientPhone: '',
+    addressLine1: '',
+    addressLine2: '',
+    stateProvince: '',
+  })
 
   // Dimensions state
   const [dimensions, setDimensions] = useState({
@@ -237,6 +252,15 @@ function NewShipmentContent() {
     }
   }, [aiSuggestion, aiDimensionSuggestion, update])
 
+  const quoteCurrency = priceResult.currency
+  const walletBalanceForQuote = quoteCurrency === 'NGN'
+    ? wallet.balanceNGN
+    : quoteCurrency === 'GHS'
+    ? wallet.balanceGHS
+    : quoteCurrency === 'KES'
+    ? wallet.balanceKES
+    : wallet.balanceUSD
+
   useEffect(() => {
     fetchAddresses('u1')
   }, [fetchAddresses])
@@ -265,11 +289,47 @@ function NewShipmentContent() {
     }
   }
 
+  const buildDomesticAddress = useCallback((city: string, direction: 'pickup' | 'delivery'): Address => {
+    const source = direction === 'pickup' ? domesticPickupForm : domesticDeliveryForm
+    return {
+      id: `${direction}-${domesticRegion}-${city.toLowerCase().replace(/\s+/g, '-')}`,
+      userId: 'u1',
+      label: direction === 'pickup' ? `${city} pickup` : `${city} delivery`,
+      type: 'commercial',
+      recipientName: source.recipientName,
+      recipientPhone: source.recipientPhone,
+      addressLine1: source.addressLine1,
+      addressLine2: source.addressLine2 || undefined,
+      city,
+      stateProvince: source.stateProvince || city,
+      postalCode: '000001',
+      country: domesticRegion,
+      isDefaultPickup: direction === 'pickup',
+      isDefaultDelivery: direction === 'delivery',
+    }
+  }, [domesticDeliveryForm, domesticPickupForm, domesticRegion])
+
+  const isDomesticAddressComplete = useCallback((value: typeof domesticPickupForm) => (
+    !!value.recipientName.trim() &&
+    !!value.recipientPhone.trim() &&
+    !!value.addressLine1.trim() &&
+    !!value.stateProvince.trim()
+  ), [])
+
+  const updateDomesticAddress = (
+    type: 'pickup' | 'delivery',
+    field: keyof typeof domesticPickupForm,
+    value: string
+  ) => {
+    const setter = type === 'pickup' ? setDomesticPickupForm : setDomesticDeliveryForm
+    setter(prev => ({ ...prev, [field]: value }))
+  }
+
   const canProceed = () => {
     switch (step) {
       case 0: return isInternational ? !!intlCorridor : !!domesticRegion
       case 1: return !!form.weight && !!form.description
-      case 2: return isInternational ? true : !!selectedPair
+      case 2: return isInternational ? true : !!selectedPair && isDomesticAddressComplete(domesticPickupForm) && isDomesticAddressComplete(domesticDeliveryForm)
       case 3: return isInternational ? !!selectedService : true
       default: return true
     }
@@ -331,8 +391,8 @@ function NewShipmentContent() {
             </p>
           </div>
           <div className="min-w-[160px] rounded-xl border border-border/70 bg-muted/50 p-4">
-            <p className={mutedLabelClassName}>Wallet</p>
-            <p className="mt-2 text-xl font-bold text-foreground">{formatCurrency(wallet.balanceUSD, 'USD')}</p>
+            <p className={mutedLabelClassName}>{isInternational ? 'Wallet' : `${quoteCurrency} Wallet`}</p>
+            <p className="mt-2 text-xl font-bold text-foreground">{formatCurrency(walletBalanceForQuote, quoteCurrency)}</p>
           </div>
         </div>
       </div>
@@ -793,6 +853,38 @@ function NewShipmentContent() {
                     )}
                   </div>
                 )}
+
+                {selectedPair && (
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    <div className="rounded-xl border border-border/70 bg-muted/35 p-4 space-y-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">Pickup address</p>
+                        <p className="text-xs text-muted-foreground">{fromCity}, {domesticRegion}</p>
+                      </div>
+                      <div className="grid gap-3">
+                        <Input value={domesticPickupForm.recipientName} onChange={e => updateDomesticAddress('pickup', 'recipientName', e.target.value)} placeholder="Pickup contact name" className="booking-field" />
+                        <Input value={domesticPickupForm.recipientPhone} onChange={e => updateDomesticAddress('pickup', 'recipientPhone', e.target.value)} placeholder="Pickup phone number" className="booking-field" />
+                        <Input value={domesticPickupForm.addressLine1} onChange={e => updateDomesticAddress('pickup', 'addressLine1', e.target.value)} placeholder="Pickup street address" className="booking-field" />
+                        <Input value={domesticPickupForm.addressLine2} onChange={e => updateDomesticAddress('pickup', 'addressLine2', e.target.value)} placeholder="Landmark / suite (optional)" className="booking-field" />
+                        <Input value={domesticPickupForm.stateProvince} onChange={e => updateDomesticAddress('pickup', 'stateProvince', e.target.value)} placeholder="State / province" className="booking-field" />
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-border/70 bg-muted/35 p-4 space-y-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">Delivery address</p>
+                        <p className="text-xs text-muted-foreground">{toCity}, {domesticRegion}</p>
+                      </div>
+                      <div className="grid gap-3">
+                        <Input value={domesticDeliveryForm.recipientName} onChange={e => updateDomesticAddress('delivery', 'recipientName', e.target.value)} placeholder="Recipient name" className="booking-field" />
+                        <Input value={domesticDeliveryForm.recipientPhone} onChange={e => updateDomesticAddress('delivery', 'recipientPhone', e.target.value)} placeholder="Recipient phone number" className="booking-field" />
+                        <Input value={domesticDeliveryForm.addressLine1} onChange={e => updateDomesticAddress('delivery', 'addressLine1', e.target.value)} placeholder="Delivery street address" className="booking-field" />
+                        <Input value={domesticDeliveryForm.addressLine2} onChange={e => updateDomesticAddress('delivery', 'addressLine2', e.target.value)} placeholder="Landmark / suite (optional)" className="booking-field" />
+                        <Input value={domesticDeliveryForm.stateProvince} onChange={e => updateDomesticAddress('delivery', 'stateProvince', e.target.value)} placeholder="State / province" className="booking-field" />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -871,6 +963,18 @@ function NewShipmentContent() {
                     <p className={mutedLabelClassName}>Delivery Time</p>
                     <p className="mt-2 font-semibold text-foreground">{selectedPair?.days || 'TBD'}</p>
                   </div>
+                  <div className={reviewCardClassName}>
+                    <p className={mutedLabelClassName}>Pickup Address</p>
+                    <p className="mt-2 font-semibold text-foreground">{domesticPickupForm.addressLine1}</p>
+                    <p className="text-sm text-muted-foreground">{fromCity}, {domesticPickupForm.stateProvince}</p>
+                    <p className="text-sm text-muted-foreground">{domesticPickupForm.recipientName} · {domesticPickupForm.recipientPhone}</p>
+                  </div>
+                  <div className={reviewCardClassName}>
+                    <p className={mutedLabelClassName}>Delivery Address</p>
+                    <p className="mt-2 font-semibold text-foreground">{domesticDeliveryForm.addressLine1}</p>
+                    <p className="text-sm text-muted-foreground">{toCity}, {domesticDeliveryForm.stateProvince}</p>
+                    <p className="text-sm text-muted-foreground">{domesticDeliveryForm.recipientName} · {domesticDeliveryForm.recipientPhone}</p>
+                  </div>
                 </div>
 
                 <Separator />
@@ -918,7 +1022,7 @@ function NewShipmentContent() {
                     >
                       <Wallet className="mb-2 h-5 w-5 text-primary" />
                       <p className="font-medium text-foreground">Wallet</p>
-                      <p className="mt-1 text-sm text-muted-foreground">{formatCurrency(wallet.balanceUSD, 'USD')}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{formatCurrency(walletBalanceForQuote, quoteCurrency)}</p>
                     </button>
                   </div>
                 </div>
@@ -996,7 +1100,7 @@ function NewShipmentContent() {
                     >
                       <Wallet className="mb-2 h-5 w-5 text-primary" />
                       <p className="font-medium text-foreground">Wallet</p>
-                      <p className="mt-1 text-sm text-muted-foreground">{formatCurrency(wallet.balanceUSD, 'USD')}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{formatCurrency(walletBalanceForQuote, quoteCurrency)}</p>
                     </button>
                   </div>
                 </div>
@@ -1097,6 +1201,10 @@ function NewShipmentContent() {
         ) : (
           <Button
             onClick={async () => {
+              if (!isInternational && selectedPair) {
+                setPickupAddress(buildDomesticAddress(fromCity, 'pickup'))
+                setDeliveryAddress(buildDomesticAddress(toCity, 'delivery'))
+              }
               setShipmentDetails({
                 corridorId: isInternational ? intlCorridor : selectedPair?.id || '',
                 serviceId: selectedService,

@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import type { PriceCalculationResult } from '@/types/pricing'
 import type { Address } from '@/types'
 
 export interface BookingQuote {
@@ -51,9 +50,7 @@ interface BookingState {
   confirmation: BookingConfirmation | null
   isProcessing: boolean
   error: string | null
-
   addresses: Address[]
-  
   setQuote: (quote: BookingQuote) => void
   setShipmentDetails: (details: BookingState['shipmentDetails']) => void
   setPickupAddress: (address: Address | null) => void
@@ -61,7 +58,6 @@ interface BookingState {
   setAddresses: (addresses: Address[]) => void
   addAddress: (address: Address) => void
   clearBooking: () => void
-  
   processPayment: (params: {
     walletId?: string
     paymentMethod: 'wallet' | 'card'
@@ -88,10 +84,10 @@ export const useBookingStore = create<BookingState>((set, get) => ({
   setPickupAddress: (address) => set({ pickupAddress: address }),
   setDeliveryAddress: (address) => set({ deliveryAddress: address }),
   setAddresses: (addresses) => set({ addresses }),
-  addAddress: (address) => set(state => ({ addresses: [...state.addresses, address] })),
-  
-  clearBooking: () => set({ 
-    currentQuote: null, 
+  addAddress: (address) => set((state) => ({ addresses: [...state.addresses, address] })),
+
+  clearBooking: () => set({
+    currentQuote: null,
     shipmentDetails: null,
     pickupAddress: null,
     deliveryAddress: null,
@@ -104,10 +100,10 @@ export const useBookingStore = create<BookingState>((set, get) => ({
       const res = await fetch(`/api/addresses?userId=${userId}`)
       const data = await res.json()
       set({ addresses: data.addresses || [] })
-      
+
       const pickup = data.addresses?.find((a: Address) => a.isDefaultPickup)
       const delivery = data.addresses?.find((a: Address) => a.isDefaultDelivery)
-      
+
       if (pickup) set({ pickupAddress: pickup })
       if (delivery) set({ deliveryAddress: delivery })
     } catch {
@@ -123,7 +119,7 @@ export const useBookingStore = create<BookingState>((set, get) => ({
         body: JSON.stringify(addressData),
       })
       const data = await res.json()
-      
+
       if (data.success) {
         get().addAddress(data.address)
         return data.address
@@ -136,39 +132,16 @@ export const useBookingStore = create<BookingState>((set, get) => ({
 
   processPayment: async (params) => {
     const { currentQuote, shipmentDetails, pickupAddress, deliveryAddress } = get()
-    
-    if (!currentQuote || !shipmentDetails) {
-      set({ error: 'Missing booking data' })
+
+    if (!currentQuote || !shipmentDetails || !pickupAddress || !deliveryAddress) {
+      set({ error: 'Missing booking data', isProcessing: false })
       return { trackingNumber: '', status: 'failed' as const, paymentStatus: 'failed' as const, createdAt: '' }
     }
 
     set({ isProcessing: true, error: null })
 
     try {
-      if (params.paymentMethod === 'wallet') {
-        const walletRes = await fetch('/api/wallet', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: currentQuote.total,
-            currency: currentQuote.currency,
-            shipmentId: `s${Date.now()}`,
-            trackingNumber: `DS-${Date.now()}`,
-          }),
-        })
-        
-        const walletData = await walletRes.json()
-        
-        if (!walletData.success) {
-          set({ error: walletData.error || 'Payment failed', isProcessing: false })
-          return { 
-            trackingNumber: '', 
-            status: 'pending_payment' as const, 
-            paymentStatus: 'failed' as const, 
-            createdAt: new Date().toISOString() 
-          }
-        }
-
+      const createShipmentAndNotify = async (paymentMethod: 'wallet' | 'card', paymentStatus: 'paid' | 'pending') => {
         const shipmentRes = await fetch('/api/shipments', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -190,15 +163,14 @@ export const useBookingStore = create<BookingState>((set, get) => ({
             shippingCost: currentQuote.baseFreight,
             customsDuties: currentQuote.customsDuties,
             totalCost: currentQuote.total,
-            paymentMethod: 'wallet',
-            paymentStatus: 'paid',
+            paymentMethod,
+            paymentStatus,
             pickupDate: new Date().toISOString(),
             estimatedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
             pickupAddress,
             deliveryAddress,
           }),
         })
-        
         const shipmentData = await shipmentRes.json()
 
         await fetch('/api/notifications', {
@@ -209,13 +181,40 @@ export const useBookingStore = create<BookingState>((set, get) => ({
             userEmail: params.userEmail,
             userPhone: params.userPhone,
             trackingNumber: shipmentData.shipment?.trackingNumber,
-            route: `${pickupAddress?.city || 'Origin'} → ${deliveryAddress?.city || 'Destination'}`,
+            route: `${pickupAddress.city} -> ${deliveryAddress.city}`,
             total: currentQuote.total,
             currency: currentQuote.currency,
             estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
           }),
         })
 
+        return shipmentData
+      }
+
+      if (params.paymentMethod === 'wallet') {
+        const walletRes = await fetch('/api/wallet', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: currentQuote.total,
+            currency: currentQuote.currency,
+            shipmentId: `s${Date.now()}`,
+            trackingNumber: `DS-${Date.now()}`,
+          }),
+        })
+
+        const walletData = await walletRes.json()
+        if (!walletData.success) {
+          set({ error: walletData.error || 'Payment failed', isProcessing: false })
+          return {
+            trackingNumber: '',
+            status: 'pending_payment' as const,
+            paymentStatus: 'failed' as const,
+            createdAt: new Date().toISOString(),
+          }
+        }
+
+        const shipmentData = await createShipmentAndNotify('wallet', 'paid')
         const confirmation: BookingConfirmation = {
           trackingNumber: shipmentData.shipment?.trackingNumber || `DS-${Date.now()}`,
           status: 'confirmed',
@@ -225,24 +224,28 @@ export const useBookingStore = create<BookingState>((set, get) => ({
           estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
           createdAt: new Date().toISOString(),
         }
-        
         set({ confirmation, isProcessing: false })
         return confirmation
       }
-      
-      return { 
-        trackingNumber: `DS-${Date.now()}`, 
-        status: 'pending_payment' as const, 
-        paymentStatus: 'pending' as const, 
-        createdAt: new Date().toISOString() 
+
+      const shipmentData = await createShipmentAndNotify('card', 'paid')
+      const confirmation: BookingConfirmation = {
+        trackingNumber: shipmentData.shipment?.trackingNumber || `DS-${Date.now()}`,
+        status: 'confirmed',
+        shipmentId: shipmentData.shipment?.id,
+        paymentStatus: 'paid',
+        estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+        createdAt: new Date().toISOString(),
       }
-    } catch (err) {
+      set({ confirmation, isProcessing: false })
+      return confirmation
+    } catch {
       set({ error: 'Payment processing failed', isProcessing: false })
-      return { 
-        trackingNumber: '', 
-        status: 'failed' as const, 
-        paymentStatus: 'failed' as const, 
-        createdAt: new Date().toISOString() 
+      return {
+        trackingNumber: '',
+        status: 'failed' as const,
+        paymentStatus: 'failed' as const,
+        createdAt: new Date().toISOString(),
       }
     }
   },

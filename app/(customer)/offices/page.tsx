@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import {
   MapPin,
@@ -9,7 +10,6 @@ import {
   Users,
   Globe,
   Search,
-  Filter,
   ChevronRight,
   Clock,
   Package,
@@ -47,8 +47,6 @@ export default function OfficesPage() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   const countries = [...new Set(branches.map((b) => b.country))];
-  const types = [...new Set(branches.map((b) => b.type))];
-
   const filteredBranches = branches.filter((branch) => {
     const matchesSearch =
       !searchQuery ||
@@ -218,102 +216,91 @@ export default function OfficesPage() {
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {countryBranches.map((branch) => (
-                <Card
-                  key={branch.id}
-                  className="group cursor-pointer transition-all hover:border-primary/40 hover:shadow-md"
-                >
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                          {branch.type === 'hq' ? (
-                            <Globe className="h-5 w-5 text-primary" />
-                          ) : branch.type === 'agent' ? (
-                            <Users className="h-5 w-5 text-green-600" />
-                          ) : (
-                            <Building2 className="h-5 w-5 text-[var(--gold)]" />
+                <Link key={branch.id} href={`/customer/offices/${branch.id}`} className="block">
+                  <Card className="group cursor-pointer transition-all hover:border-primary/40 hover:shadow-md">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                            {branch.type === 'hq' ? (
+                              <Globe className="h-5 w-5 text-primary" />
+                            ) : branch.type === 'agent' ? (
+                              <Users className="h-5 w-5 text-green-600" />
+                            ) : (
+                              <Building2 className="h-5 w-5 text-[var(--gold)]" />
+                            )}
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-[var(--ink)]">{branch.name}</h3>
+                            <p className="text-xs text-[var(--muted-text)] capitalize">
+                              {branch.type}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge
+                          variant={branch.isActive ? 'default' : 'secondary'}
+                          className={cn(
+                            'text-xs',
+                            branch.isActive
+                              ? 'bg-green-100 text-green-700 border-green-200'
+                              : 'bg-gray-100 text-gray-600 border-gray-200'
+                          )}
+                        >
+                          {branch.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </div>
+
+                      <Separator />
+
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-start gap-2">
+                          <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                          <span className="text-[var(--muted-text)]">
+                            {branch.address.addressLine1}
+                            {branch.address.addressLine2 && `, ${branch.address.addressLine2}`}
+                            , {branch.address.city}
+                            {branch.address.stateProvince && `, ${branch.address.stateProvince}`}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Phone className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                          <span className="text-[var(--muted-text)]">{branch.phone}</span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                          <span className="text-[var(--muted-text)]">{branch.email}</span>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-4 text-xs text-[var(--muted-text)]">
+                          <div className="flex items-center gap-1">
+                            <Package className="h-3 w-3" />
+                            <span>{branch.shipmentCount.toLocaleString()}</span>
+                          </div>
+                          {branch.commissionRate && (
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              <span>{branch.commissionRate}%</span>
+                            </div>
                           )}
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-[var(--ink)]">{branch.name}</h3>
-                          <p className="text-xs text-[var(--muted-text)] capitalize">
-                            {branch.type}
-                          </p>
-                        </div>
-                      </div>
-                      <Badge
-                        variant={branch.isActive ? 'default' : 'secondary'}
-                        className={cn(
-                          'text-xs',
-                          branch.isActive
-                            ? 'bg-green-100 text-green-700 border-green-200'
-                            : 'bg-gray-100 text-gray-600 border-gray-200'
-                        )}
-                      >
-                        {branch.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
-                    </div>
-
-                    <Separator />
-
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-start gap-2">
-                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                        <span className="text-[var(--muted-text)]">
-                          {branch.address.addressLine1}
-                          {branch.address.addressLine2 && `, ${branch.address.addressLine2}`}
-                          , {branch.address.city}
-                          {branch.address.stateProvince && `, ${branch.address.stateProvince}`}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                        <a
-                          href={`tel:${branch.phone}`}
-                          className="text-[var(--muted-text)] hover:text-primary"
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 gap-1 text-xs opacity-0 transition-opacity group-hover:opacity-100"
                         >
-                          {branch.phone}
-                        </a>
+                          View Details
+                          <ChevronRight className="h-3 w-3" />
+                        </Button>
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                        <a
-                          href={`mailto:${branch.email}`}
-                          className="text-[var(--muted-text)] hover:text-primary"
-                        >
-                          {branch.email}
-                        </a>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-4 text-xs text-[var(--muted-text)]">
-                        <div className="flex items-center gap-1">
-                          <Package className="h-3 w-3" />
-                          <span>{branch.shipmentCount.toLocaleString()}</span>
-                        </div>
-                        {branch.commissionRate && (
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            <span>{branch.commissionRate}%</span>
-                          </div>
-                        )}
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-7 gap-1 text-xs opacity-0 transition-opacity group-hover:opacity-100"
-                      >
-                        View Details
-                        <ChevronRight className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>

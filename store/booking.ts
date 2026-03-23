@@ -70,7 +70,7 @@ interface BookingState {
     userPhone: string
   }) => Promise<BookingConfirmation>
   fetchAddresses: (userId: string) => Promise<void>
-  saveAddress: (address: Omit<Address, 'id' | 'createdAt'>) => Promise<Address | null>
+  saveAddress: (address: Omit<Address, 'id'>) => Promise<Address | null>
 }
 
 export const useBookingStore = create<BookingState>((set, get) => ({

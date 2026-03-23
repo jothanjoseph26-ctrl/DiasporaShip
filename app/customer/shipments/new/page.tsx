@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import {
@@ -58,7 +58,7 @@ const sidebarPanelClassName =
 const sidebarHighlightClassName =
   'overflow-hidden border-primary/25 !bg-transparent bg-gradient-to-br from-primary/16 via-primary/10 to-background shadow-sm'
 
-export default function NewShipmentPage() {
+function NewShipmentContent() {
   const searchParams = useSearchParams()
   const type = (searchParams.get('type') as ShipmentCategory) || 'international'
   const initialCorridor = searchParams.get('corridor') as InternationalCorridorId | null
@@ -1126,5 +1126,21 @@ export default function NewShipmentPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function NewShipmentPage() {
+  return (
+    <Suspense fallback={
+      <div className="mx-auto max-w-5xl p-8">
+        <div className="animate-pulse space-y-4">
+          <div className="h-12 bg-muted rounded-xl w-1/3"></div>
+          <div className="h-64 bg-muted rounded-xl"></div>
+          <div className="h-48 bg-muted rounded-xl"></div>
+        </div>
+      </div>
+    }>
+      <NewShipmentContent />
+    </Suspense>
   )
 }

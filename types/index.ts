@@ -26,6 +26,7 @@ export interface User {
 
 export interface Address {
   id: string;
+  userId?: string;
   label: string;
   type: 'residential' | 'commercial' | 'warehouse' | 'port';
   recipientName: string;
@@ -40,6 +41,7 @@ export interface Address {
   lng?: number;
   isDefaultPickup: boolean;
   isDefaultDelivery: boolean;
+  createdAt?: string;
 }
 
 export type ShipmentStatus = 
